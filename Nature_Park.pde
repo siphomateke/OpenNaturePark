@@ -59,9 +59,12 @@ void setup() {
   addAnimals();
   
   initRandomShapeGen();
+  // Load last settings and highscore from the config file
   loadConfig();
+  // Initialize all the gui elements
   initGUI();
   //initSounds();
+  // Initialize the particle simulation
   sim = new ParticleSim();
   
   scoreFont = new NumericFont(new String[][] {
