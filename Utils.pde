@@ -197,20 +197,6 @@ public boolean wasKeyDown(String g) {
     r = false;
   }
   return r;
-} }
-  return r;
-}
-
-public boolean wasKeyDown(String g) {
-  boolean r = false;
-  if (wereKeysDown.containsKey(g)) {
-    if (wereKeysDown.get(g)) {
-      r = true;
-    }
-  } else {
-    r = false;
-  }
-  return r;
 }
 
 class GraphicRegion {
