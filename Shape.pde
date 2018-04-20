@@ -44,7 +44,7 @@ class Shape {
     bottom += y;
   }
   public void toBoard() {
-    while (bottom<YTILES-1 && !colliding(x, y+1)) {
+    while (bottom<yTiles-1 && !colliding(x, y+1)) {
       this.y++;
       updateBounds();
     }
@@ -70,8 +70,8 @@ class Shape {
     if (left<0) {
       x = 0;
     }
-    if (right>XTILES-1) {
-      x -= right-(XTILES-1);
+    if (right>xTiles-1) {
+      x -= right-(xTiles-1);
     }
     updateBounds();
   }
@@ -86,7 +86,7 @@ class Shape {
     timer+=delta;
     if (timer>speed) {
       // Move the shape down if it's not hitting the bottom
-      if (bottom<YTILES-1 && !colliding(x, y+1)) {
+      if (bottom<yTiles-1 && !colliding(x, y+1)) {
         this.y++;
       }
       // If it hits the bottom add this to the board

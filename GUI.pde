@@ -80,18 +80,15 @@ public void initGUI() {
   //s.setLocalColorScheme(7);
   s.setShowValue(true);
   
-  // DISABLED ==============
-  /*
   addGUIElement("GridSizeLabel",STATESETTINGS,new GLabel(this, toWorldX(10), toWorldY(25), toWorldX(50), toWorldY(20), "Grid Size: "));
   addGUIElement("GridSizeXTextField",STATESETTINGS,new GTextField(this, toWorldX(50), toWorldY(30), toWorldX(20), toWorldY(10)));
   addGUIElement("GridSizeTimesLabel",STATESETTINGS,new GLabel(this, toWorldX(77), toWorldY(25), toWorldX(50), toWorldY(20), "x"));
   addGUIElement("GridSizeYTextField",STATESETTINGS,new GTextField(this, toWorldX(90), toWorldY(30), toWorldX(20), toWorldY(10)));
   
   GTextField q = (GTextField) getGUIElement("GridSizeXTextField");
-  q.setText(str(XTILES));
+  q.setText(str(xTiles));
   q = (GTextField) getGUIElement("GridSizeYTextField");
-  q.setText(str(YTILES));
-  =========================*/
+  q.setText(str(yTiles));
   
   addGUIElement("BackButtonSettings",STATESETTINGS,new GImageButton(this, toWorldX(100), toWorldY(100), toWorldX(14), toWorldY(14), new String[]{
     scaleImageToWorld("back_button"),
@@ -144,7 +141,13 @@ public void handleButtonEvents(GImageButton button, GEvent event) {
   if (name=="SaveButton" && gameState==STATESETTINGS) {
     GValueControl s = (GValueControl) getGUIElement("SpeedSlider");
     numToFastest = s.getValueI();
+    GTextField qx = (GTextField) getGUIElement("GridSizeXTextField");
+    GTextField qy = (GTextField) getGUIElement("GridSizeYTextField");
+    xTiles = int(qx.getText());
+    yTiles = int(qy.getText());
     saveConfig();
+    //updateGameSize();
+    exit();
     gameState = STATEINTRO;
   }
   if (name=="BackButtonGame" && gameState==STATEGAME) {

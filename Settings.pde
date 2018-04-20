@@ -10,10 +10,10 @@ public void gameSettings(float time) {
     GSlider s = (GSlider) getGUIElement("SpeedSlider");
     s.setValue(numToFastest);
     
-    /*GTextField q = (GTextField) getGUIElement("GridSizeXTextField");
-    q.setText(str(XTILES));
+    GTextField q = (GTextField) getGUIElement("GridSizeXTextField");
+    q.setText(str(xTiles));
     q = (GTextField) getGUIElement("GridSizeYTextField");
-    q.setText(str(YTILES));*/
+    q.setText(str(yTiles));
   }
   background(#8abde1);
   drawImage("cloud",0,82);
@@ -30,6 +30,8 @@ public void saveConfig() {
   json.setFloat("version",VERSION);
   json.setInt("highScore",highScore);
   json.setInt("numToFastest",numToFastest);
+  json.setInt("xTiles",xTiles);
+  json.setInt("yTiles",yTiles);
   saveJSONObject(json, "data/config.json");
 }
 
@@ -45,6 +47,12 @@ public void loadConfig() {
     }
     if (json.hasKey("numToFastest")) {
       numToFastest = json.getInt("numToFastest");
+    }
+    if (json.hasKey("xTiles")) {
+      xTiles = json.getInt("xTiles");
+    }
+    if (json.hasKey("yTiles")) {
+      yTiles = json.getInt("yTiles");
     }
   }
   updateGameSize();

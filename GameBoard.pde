@@ -17,10 +17,10 @@ class GameBoard {
     this.yOffset = yOffset;
     offset = toWorldCoords(new PVector(xOffset, yOffset));
     // The array which stores the tiles
-    tiles = new Block[XTILES][YTILES];
+    tiles = new Block[xTiles][yTiles];
     // Start of with a balnk board
-    for (int x=0; x<XTILES; x++) {
-      for (int y=0; y<YTILES; y++) {
+    for (int x=0; x<xTiles; x++) {
+      for (int y=0; y<yTiles; y++) {
         setBlock(x, y, "blank");
       }
     }
@@ -34,28 +34,28 @@ class GameBoard {
   }
   public void generateBackground() {
     PImage bi = getImage("bg_border_tile");
-    PGraphics g = createGraphics((XTILES*TILESIZE)+(bi.width*2),(YTILES*TILESIZE)+(bi.height*2));
+    PGraphics g = createGraphics((xTiles*TILESIZE)+(bi.width*2),(yTiles*TILESIZE)+(bi.height*2));
     g.beginDraw();
     // Draw the border tiles at the top and bottom of the screen
     for (int x=0;x<(g.width)/(bi.width-1);x++) {
       for (int y=0;y<2;y++) {
-        g.image(bi,x*(bi.width-1),y*((YTILES*TILESIZE)+(bi.height)));
+        g.image(bi,x*(bi.width-1),y*((yTiles*TILESIZE)+(bi.height)));
       }
     }
     // Draw the border tiles on the left and right of the screen
     for (int y=0;y<(g.height)/(bi.height-1);y++) {
       for (int x=0;x<2;x++) {
-        g.image(bi,x*((XTILES*TILESIZE)+(bi.width)),y*(bi.height-1));
+        g.image(bi,x*((xTiles*TILESIZE)+(bi.width)),y*(bi.height-1));
       }
     }
     // Draw the actual game background tiles
     PImage i = getImage("bg_tile");
-    for (int x=0; x<XTILES; x++) {
-      for (int y=0; y<YTILES; y++) {
+    for (int x=0; x<xTiles; x++) {
+      for (int y=0; y<yTiles; y++) {
         g.image(i, (x*TILESIZE)+(bi.width), (y*TILESIZE)+(bi.height));
       }
     }
-    g.image(getImage("bg_edge"), (XTILES*TILESIZE)+(bi.width), (bi.height));
+    g.image(getImage("bg_edge"), (xTiles*TILESIZE)+(bi.width), (bi.height));
     g.endDraw();
     img = g;
     imgSize = imgToWorldCoords(img);
@@ -63,8 +63,8 @@ class GameBoard {
   // Reset the board
   // called when game is over
   public void reset() {
-    for (int x=0; x<XTILES; x++) {
-      for (int y=0; y<YTILES; y++) {
+    for (int x=0; x<xTiles; x++) {
+      for (int y=0; y<yTiles; y++) {
         setBlock(x, y, "blank");
       }
     }
@@ -90,8 +90,8 @@ class GameBoard {
     translate(-v.x, -v.y);
 
     // Draw all the tiles on the board
-    for (int x=0; x<XTILES; x++) {
-      for (int y=0; y<YTILES; y++) {
+    for (int x=0; x<xTiles; x++) {
+      for (int y=0; y<yTiles; y++) {
         tiles[x][y].display();
       }
     }
@@ -117,8 +117,8 @@ class GameBoard {
       fillTimer = 0;
       boolean filled = false;
       outerloop:
-      for (int y=YTILES-1; y>=0; y--) {
-        for (int x=0; x<XTILES; x++) {
+      for (int y=yTiles-1; y>=0; y--) {
+        for (int x=0; x<xTiles; x++) {
           if (!filled) {
             if (tiles[x][y].getType().name=="blank") {
               setBlock(x,y,rainbow[y%5]);
@@ -141,8 +141,8 @@ class GameBoard {
       boolean appliedGravity = true;
       while (appliedGravity) {
         appliedGravity = false;
-        for (int x=0; x<XTILES; x++) {
-          for (int y=YTILES-1; y>=0; y--) {
+        for (int x=0; x<xTiles; x++) {
+          for (int y=yTiles-1; y>=0; y--) {
             // Apply gravity if there is no block underneath
             if (blockExists(x, y+1, "blank") && tiles[x][y].type!="blank") {
               tiles[x][y+1] = makeBlock(x, y+1, tiles[x][y].type);
@@ -158,8 +158,8 @@ class GameBoard {
         int avgX = 0;
         int avgY = 0;
         int total = 0;
-        for (int x=0; x<XTILES; x++) {
-          for (int y=YTILES-1; y>=0; y--) {
+        for (int x=0; x<xTiles; x++) {
+          for (int y=yTiles-1; y>=0; y--) {
             String type = tiles[x][y].getType().name;
             if (type!="blank") {
               if (type!="lightning" && type!="star" && type!="n" && type!="stone") {
@@ -235,7 +235,7 @@ class GameBoard {
                 //stable = false;
   
                 // Explode all blocks below
-                for (int j=y; j<YTILES; j++) {
+                for (int j=y; j<yTiles; j++) {
                   explode(x, j);
                 }
               }
@@ -243,8 +243,8 @@ class GameBoard {
               else if (type=="star" && blockExists(x, y+1)) {
                 explode(x, y);
                 String typeCheck = tiles[x][y+1].getType().name;
-                for (int x2=0; x2<XTILES; x2++) {
-                  for (int y2=YTILES-1; y2>=0; y2--) {
+                for (int x2=0; x2<xTiles; x2++) {
+                  for (int y2=yTiles-1; y2>=0; y2--) {
                     if (tiles[x2][y2].getType().name==typeCheck) {
                       explode(x2, y2);
                     }
@@ -280,8 +280,8 @@ class GameBoard {
       }
       player.update(delta);
     }
-    for (int x=0; x<XTILES; x++) {
-      for (int y=YTILES-1; y>=0; y--) {
+    for (int x=0; x<xTiles; x++) {
+      for (int y=yTiles-1; y>=0; y--) {
         tiles[x][y].update(time);
       }
     }
@@ -294,8 +294,8 @@ class GameBoard {
   public boolean isStable() {
     boolean stable = true;
     loop:
-    for (int x=0; x<XTILES; x++) {
-      for (int y=YTILES-1; y>=0; y--) {
+    for (int x=0; x<xTiles; x++) {
+      for (int y=yTiles-1; y>=0; y--) {
         if (tiles[x][y].getType().name!="blank") {
           // If this will fall or disappear then it's unstable
           if (blockExists(x, y+1, "blank") || tiles[x][y].explode || (blockExists(x, y+1) && tiles[x][y+1].explode)) {
@@ -310,8 +310,8 @@ class GameBoard {
   public boolean isExploding() {
     boolean exploding = false;
     loop:
-    for (int x=0; x<XTILES; x++) {
-      for (int y=YTILES-1; y>=0; y--) {
+    for (int x=0; x<xTiles; x++) {
+      for (int y=yTiles-1; y>=0; y--) {
         if (tiles[x][y].getType().name!="blank") {
           if (tiles[x][y].exploding) {
             exploding = true;
@@ -330,7 +330,7 @@ public void drawCombos(int x, int y) {
 }
 
 public boolean blockExists(int x, int y, String name) {
-  if (x<XTILES && x>=0 && y<YTILES && y>=0 && ((board.tiles[x][y].getType().name==name || (name=="any" && board.tiles[x][y].getType().name!="blank")) || name==null)) {
+  if (x<xTiles && x>=0 && y<yTiles && y>=0 && ((board.tiles[x][y].getType().name==name || (name=="any" && board.tiles[x][y].getType().name!="blank")) || name==null)) {
     return true;
   } else {
     return false;

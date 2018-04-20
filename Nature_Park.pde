@@ -2,12 +2,12 @@ import g4p_controls.*;
 
 //import processing.sound.*;
 
-public static final float VERSION = 0.7;
+public static final float VERSION = 0.75;
 
 // Declare constants
 public static final int TILESIZE = 10;
-public static final int XTILES = 6;
-public static final int YTILES = 10;
+int xTiles = 6;
+int yTiles = 10;
 // The actual width of the game on a phone
 // to allow scaling up proportionately
 public static final int REALWIDTH = 128;
