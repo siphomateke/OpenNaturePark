@@ -199,10 +199,11 @@ public void initRandomShapeGen() {
   addColorType("red", 0.5, 0);
   addColorType("green", 0.5, 0);
   addColorType("purple", 0.5, 1);
-  addColorType("stone", 0.01, 3);
-  addColorType("n", 0.15, 3, true);
-  addColorType("lightning", 0.15, 3, true);
-  addColorType("star", 0.15, 3, true);
+  addColorType("stone", 0.2, 3);
+  // 0.15 for specials
+  addColorType("n", 0.3, 2, true);
+  addColorType("lightning", 0.3, 2, true);
+  addColorType("star", 0.3, 2, true);
 
   // 1
   addShapeType(new ShapeType(new PVector[][]{
