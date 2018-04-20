@@ -49,7 +49,7 @@ void setup() {
   //fullScreen();
   noSmooth();
   center = new PVector(width/2,height/2);
-  windowWidth = height;
+  windowWidth = width;
   padding = ((width-windowWidth)/2);
   // Load all images in the data directory
   loadAllImages("/");
