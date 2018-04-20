@@ -34,14 +34,14 @@ class Block {
   public void update(float delta) {
     if (explode) {
       timer+=delta;
-      if (timer>(speed/2.5) && timer<(speed/1.6)) {
+      if (timer>(speed/2.5) && timer<(speed/1.9)) {
         exploding = true;
         img = getImage("block_explosion1");
       }
-      else if (timer>=(speed/1.6) && timer<(speed/1.25)) {
+      else if (timer>=(speed/1.9) && timer<(speed/1.5)) {
         img = getImage("block_explosion2");
       }
-      else if (timer>=(speed/1.25)) {
+      else if (timer>=(speed/1.5)) {
         board.setBlock(x,y,"blank");  
         score+=(combos-1);
       }

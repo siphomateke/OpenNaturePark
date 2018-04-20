@@ -38,27 +38,65 @@ public PImage cropImage(String name, int x, int y, int w, int h) {
   return g.get(0,0,w,h);
 }
 
-public void drawImage(PImage img, int x, int y, float angle) {
+public void drawImage(PImage img, int x, int y, float scale, float angle) {
   PVector size = imgToWorldCoords(img);
   pushMatrix();
   translate(toWorldX(x),toWorldY(y));
   translate(size.x/2,size.y/2);
   rotate(angle);
+  scale(scale);
   translate(-size.x/2,-size.y/2);
   image(img,0,0,size.x,size.y);
   popMatrix();
 }
 
 public void drawImage(PImage img, int x, int y) {
-  drawImage(img,x,y,0);
+  drawImage(img,x,y,1,0);
 }
 
 public void drawImage(String img, int x, int y, float angle) {
-  drawImage(getImage(img),x,y,angle);
+  drawImage(getImage(img),x,y,1,angle);
 }
 
 public void drawImage(String img, int x, int y) {
   drawImage(img,x,y,0);
+}
+
+public void drawImage(String img, int x, int y, float scale, float angle) {
+  drawImage(getImage(img),x,y,scale,angle);
+}
+
+class StackImg{
+  String img;
+  int x;
+  int y;
+  float delay;
+  float timer;
+  StackImg(String img, int x, int y, float delay) {
+    this.img = img;
+    this.x = x;
+    this.y = y;
+    this.timer = 0;
+    this.delay = delay;
+  }
+}
+
+ArrayList<StackImg> imageStack = new ArrayList<StackImg>();
+public void drawImageDelay(String img, int x, int y, float delay) {
+  imageStack.add(new StackImg(img,x,y,delay));
+}
+
+public void drawImageStack(float time) {
+  ArrayList<StackImg> tmpImageStack = new ArrayList<StackImg>(imageStack);
+  for (StackImg s : tmpImageStack) {
+    if (s.timer<s.delay) {
+      drawImage(s.img,s.x,s.y);
+      s.timer+=time;
+    }
+    else {
+      imageStack.remove(s);
+    }
+  }
 }
 
 public PVector imgToWorldCoords(PImage img) {
@@ -149,7 +187,9 @@ public boolean wasKeyDown(String g) {
 
 public void saveConfig() {
   JSONObject json = new JSONObject();
-  json.setInt("high_score",highScore);
+  json.setFloat("version",VERSION);
+  json.setInt("highScore",highScore);
+  json.setInt("numToFastest",numToFastest);
   saveJSONObject(json, "data/config.json");
 }
 
@@ -157,6 +197,14 @@ public void loadConfig() {
   File f = new File(dataPath("config.json"));
   if (f.exists()) {
     JSONObject json = loadJSONObject("data/config.json");
-    highScore = json.getInt("high_score");
+    if (json.hasKey("high_score")) {
+      highScore = json.getInt("high_score");
+    }
+    else if (json.hasKey("highScore")) {
+      highScore = json.getInt("highScore");
+    }
+    if (json.hasKey("numToFastest")) {
+      numToFastest = json.getInt("numToFastest");
+    }
   }
 }

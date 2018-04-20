@@ -260,7 +260,10 @@ class GameBoard {
         }
         if (combos>1 && total>0) {
           animals.get(animalTypes.get(animal)).setEmotion("happy",2000);
-          drawCombos(avgX/total, avgY/total);
+          int xc = avgX/total;
+          int yc = avgY/total;  
+          drawCombos(xc, yc);
+          sim.explode((xc*TILESIZE)+board.xOffset, (yc*TILESIZE)+board.yOffset);
         }
   
         timer = 0;
@@ -322,8 +325,8 @@ class GameBoard {
 }
 
 public void drawCombos(int x, int y) {
-  //comboFont.writeDelay(str(combos), 1000, (x*TILESIZE)+board.xOffset+TILESIZE, (y*TILESIZE)+board.yOffset);
-  comboFont.writeDelay(str(combos), 1000, 34, 56);
+  comboFont.writeDelay(str(combos), 1000, (x*TILESIZE)+board.xOffset+TILESIZE, (y*TILESIZE)+board.yOffset);
+  //comboFont.writeDelay(str(combos), 1000, 34, 56);
 }
 
 public boolean blockExists(int x, int y, String name) {

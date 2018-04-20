@@ -28,34 +28,32 @@ class Particle {
     vel.add(accel);
     loc.add(vel);
     
-    if (loc.x<=0) {
+    if (loc.x<0) {
       dead = true;
     }
-    if (loc.y<=0) {
+    if (loc.y<0) {
       dead = true;
     }
-    if (loc.x>=REALWIDTH) {
+    if (loc.x>REALWIDTH) {
       dead = true;
     }
-    if (loc.y>=REALHEIGHT) {
+    if (loc.y>REALHEIGHT) {
       dead = true;
     }
     age+=time;
-    if (age>=lifetime && !dead) {
+    if (age>=lifetime && !dead) { 
       dead = true;
     }
   }
   public void display() {
-    pushMatrix();
-    drawImage(getImage("combo_star"),int(loc.x),int(loc.y),angle);
-    popMatrix();
+    drawImage(getImage("combo_star"),int(loc.x),int(loc.y),((lifetime-age)/lifetime),angle);
   }
 } 
 
 class ParticleSim {
   ArrayList<Particle> particles = new ArrayList<Particle>();
   ParticleSim() {
-    explode(64,64);
+    
   }
   
   public void update(float time) {
@@ -79,8 +77,8 @@ class ParticleSim {
   }
   
   public void explode(int x, int y) {
-    for (int i=0;i<100;i++) {
-      addParticle(x,y,PVector.fromAngle(random(2*PI)).mult(random(0,5)),random(0,radians(5)),random(0,2*PI),random(1000,2000));
+    for (int i=0;i<10;i++) {
+      addParticle(x,y,PVector.fromAngle(random(2*PI)).mult(random(1,3)),random(0,radians(5)),random(0,2*PI),random(2000,3000));
     }
   }
 }

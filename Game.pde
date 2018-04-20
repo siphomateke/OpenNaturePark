@@ -3,6 +3,17 @@ boolean paused = false;
 boolean gameover = false;
 boolean newGame = true;
 int animal = 0;
+public void reDrawBackground() {
+  background(#fefeaa);
+  drawImage(getImage("main_bg_left"),0,15);
+  drawImage(getImage("main_bg_top"),0,13);
+  drawImage(getImage("main_bar"),0,0);
+  drawImage(getImage("main_bg_bottom"),0,125);
+  drawImage(getImage("main_bg_right"),72,15);
+  drawImage(getImage("main_boat"),72,59);
+  drawImage(cropImage("intro_buble",21,0,37,62),107,14);
+  drawImage(getImage("main_wave"),72,121);  
+}
 public void game(float time) {
   if (gameStateChanged) {
     background(#fefeaa);
@@ -22,6 +33,9 @@ public void game(float time) {
     timers.put("keyLeft",0f);
     timers.put("keyRight",0f);
     timers.put("keyDown",0f);
+    timers.put("gameStart1",0f);
+    timers.put("gameStart2",0f);
+    timers.put("gameStart3",0f);
   }
   // The current animal
   Animal cAnimal = animals.get(animalTypes.get(animal)); 
@@ -67,18 +81,41 @@ public void game(float time) {
     cAnimal.setEmotion("sad",10);
     board.fillUp(time);
   }
+  /*else if (newGame) {
+    if (timers.get("gameStart1")==0) {
+      playSound("ready");
+    }
+    timers.put("gameStart1",timers.get("gameStart1")+time);
+    if (timers.get("gameStart1")>1000 && timers.get("gameStart2")==0) {
+      playSound("set");
+    }
+    if (timers.get("gameStart1")>1000 && timers.get("gameStart3")==0) {
+      timers.put("gameStart2",timers.get("gameStart2")+time);
+      if (timers.get("gameStart2")>1000) {
+        playSound("go");  
+      }
+    }
+    if (timers.get("gameStart2")>1000) {
+      timers.put("gameStart3",timers.get("gameStart3")+time);
+      if (timers.get("gameStart3")>750) {
+        newGame();
+      }
+    }
+  }*/
   if (!paused) {
     board.update(time);
   }
+  reDrawBackground();
   drawImage(getImage("main_bg_right"), 72, 15);
   cAnimal.display(72,59);
   board.display();
   if (paused) {
     drawImage("paused",11,60);
   }
+  drawImageStack(time);
   scoreFont.write(str(score),65,4);
   scoreFont.write(str(highScore),123,4);
-  if (combos>2) {
+  /*if (combos>2) {
     drawImage(getImage("combo"), 17, 39);
     drawImage(getImage("combo_star"), 11, 60);
     drawImage(getImage("combo_star"), 23, 42);
@@ -86,15 +123,29 @@ public void game(float time) {
     drawImage(getImage("combo_star"), 48, 36);
     drawImage(getImage("combo_star"), 46, 78);
     drawImage(getImage("combo_star"), 56, 63);
-  }
-  comboFont.display();
+  }*/
   sim.update(time);
   sim.display();
+  comboFont.display();
+  
+  /*if (newGame) {
+    if (timers.get("gameStart1")<1000 && timers.get("gameStart2")==0) {
+      drawImage(getImage("ready_txt"),11,60);
+    }
+    else if (timers.get("gameStart2")<1000) {
+      drawImage(getImage("set_txt"),11,60);
+    }
+    else if (timers.get("gameStart3")<1000) {
+      drawImage(getImage("go_txt"),11,60);
+    }
+  }*/
 }
 
 public void gameOver() {
   newGame = true;
   gameover = false;
+  level = 0;
+  score = 0;
   board.setNextPlayer(null);
   saveConfig();
 }
@@ -121,5 +172,9 @@ public void newGame() {
     speed = initspeed;
     level = 0;
     score = 0;
+    
+    timers.put("gameStart1",0f);
+    timers.put("gameStart2",0f);
+    timers.put("gameStart3",0f);
   }
 }

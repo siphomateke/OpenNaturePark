@@ -65,7 +65,6 @@ class Animal {
   public void display(int x, int y, String cEye, String cMouth, boolean crying, boolean intro) {
     if (visible) {
       int move = int(timer/500%2);
-      int blink = int(timer/1000%2);
       x+=myX;
       y+=myY;
       y+=move;
@@ -86,7 +85,9 @@ class Animal {
 
       int eX = 0;
       int eY = 0;
-      /*PVector eyeLoc = getComponentLoc("eye", cEye);
+      /*
+      // Follow mouse with eyes
+      PVector eyeLoc = getComponentLoc("eye", cEye);
       PVector diff = PVector.sub(target, new PVector(eyeLoc.x+x, eyeLoc.y+y)).normalize().mult(2);
       eX = int(diff.x);
       eY = int(diff.y);*/

@@ -1,3 +1,9 @@
+import g4p_controls.*;
+
+//import processing.sound.*;
+
+public static final float VERSION = 0.7;
+
 // Declare constants
 public static final int TILESIZE = 10;
 public static final int XTILES = 6;
@@ -29,6 +35,7 @@ int combos = 0;
 int gameState = 1;
 public static final int STATEINTRO = 1;
 public static final int STATEGAME = 2;
+public static final int STATESETTINGS = 3;
 int prevGameState = 0;
 boolean gameStateChanged = false;
 
@@ -50,6 +57,12 @@ void setup() {
   generateBlocks();
   // Generate all the animals
   addAnimals();
+  
+  initRandomShapeGen();
+  loadConfig();
+  initGUI();
+  //initSounds();
+  sim = new ParticleSim();
   
   scoreFont = new NumericFont(new String[][] {
       {"00", "0"}, 
@@ -75,11 +88,6 @@ void setup() {
       {"combo_8", "8"},
       {"combo_9", "9"},
   });
-  
-  initRandomShapeGen();
-  loadConfig();
-  initGUI();
-  sim = new ParticleSim();
 }
 
 float now = 0, then = 0, time = 0;
@@ -106,8 +114,11 @@ void draw() {
     case STATEGAME:
       game(time);
       break;
+    case STATESETTINGS:
+      gameSettings(time);
+      break;
   }
-  
+  updateGUI(time);
   then = now;
 }
 
@@ -156,9 +167,6 @@ public void keyReleased() {
       }
     }
   }
-  if (gameState==STATEINTRO) {
-    gameState = STATEGAME;
-  }
 }
 
 String introAnimal = "bunny";
@@ -174,10 +182,6 @@ public void intro(float time) {
   animals.get(introAnimal).update(time);
   
   drawIntro();
-  
-  if (isKeyDown("p")) {
-    //gameState = STATEGAME;
-  }
 }
 
 public void drawParallax(String img, int x, int y, int z) {
@@ -221,6 +225,6 @@ public void drawIntro() {
   animals.get(introAnimal).display(36,51,"happy","open",false,true);
   drawImage("intro_title",16,7);
   drawImage("intro_flower1",37,16);
-  drawImage("play_button",14,90);
-  drawImage("settings_button",100,90);
+  //drawImage("play_button",14,90);
+  //drawImage("settings_button",100,90);
 }
