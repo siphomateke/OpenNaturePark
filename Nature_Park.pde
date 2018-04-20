@@ -12,7 +12,7 @@ int yTiles = 10;
 // to allow scaling up proportionately
 public static final int INTROWIDTH = 128;
 public static final int INTROHEIGHT = 128;
-int gameWidth = 256;
+int gameWidth = 128;
 int gameHeight = 128;
 float gameScale = 2;
 int windowWidth = 0;
@@ -49,12 +49,9 @@ NumericFont comboFont;
 PVector center;
 
 void setup() {
-  size(512,256);
+  size(128,128);
   //fullScreen();
   noSmooth();
-  windowWidth = width;
-  windowHeight = height;
-  center = new PVector(width/2,height/2);
   // Load all images in the data directory
   loadAllImages("/");
   // Generate all the different block types
@@ -63,6 +60,9 @@ void setup() {
   addAnimals();
   
   initRandomShapeGen();
+
+  updateGameSize();
+
   // Load last settings and highscore from the config file
   loadConfig();
   // Initialize all the gui elements

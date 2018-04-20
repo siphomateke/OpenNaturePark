@@ -146,8 +146,7 @@ public void handleButtonEvents(GImageButton button, GEvent event) {
     xTiles = int(qx.getText());
     yTiles = int(qy.getText());
     saveConfig();
-    //updateGameSize();
-    exit();
+    updateGameSize();
     gameState = STATEINTRO;
   }
   if (name=="BackButtonGame" && gameState==STATEGAME) {

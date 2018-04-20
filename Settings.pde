@@ -26,13 +26,11 @@ public void drawImageRandom(String img, int num) {
 }
 
 public void updateGameSize() {
-  makeGameBoard();
-  int newWidth = board.getRightEdge()+getImage("main_bg_right").width;
-  surface.setSize(int((newWidth)*gameScale),height);  
-  gameWidth = newWidth;
+  surface.setSize(int(gameWidth * gameScale), int(gameHeight * gameScale));
   windowWidth = width;
   windowHeight = height;
   //initGUI();
+  center = new PVector(width/2,height/2);
 }
 
 public void saveConfig() {

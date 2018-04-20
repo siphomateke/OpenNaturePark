@@ -35,11 +35,14 @@ public void makeGameBoard() {
 }
 public void game(float time) {
   if (gameStateChanged) {
-    updateGameSize();
     drawGameBackground();
     
     // Create the game board
     makeGameBoard();
+    
+    int nextPlayerSize = int(TILESIZE * getMaximumShapeSize().x);
+    gameWidth = board.getRightEdge()+nextPlayerSize+(TILESIZE * 4);
+    updateGameSize();
     
     timers = new HashMap<String, Float>();
     timers.put("keyLeft",0f);

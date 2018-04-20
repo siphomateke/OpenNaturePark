@@ -130,7 +130,7 @@ public float toGameX(int x) {
 }
 
 public float toGameY(int y) {
-  return (float(y)/float(height))*gameHeight;
+  return (float(y)/float(windowHeight))*gameHeight;
 }
 
 HashMap<String, Boolean> keysDown = new HashMap<String, Boolean>();

@@ -148,10 +148,50 @@ class ShapeType {
 }
 
 ArrayList<ShapeType> shapeTypes = new ArrayList<ShapeType>();
+ArrayList<ShapeType> possibleShapeTypes = new ArrayList<ShapeType>();
 public void addShapeType(ShapeType b, float chance) {
+  possibleShapeTypes.add(b);
   for (int i=0; i<chance*100; i++) {
     shapeTypes.add(b);
   }
+}
+
+public PVector getShapeSize(PVector[] blocks) {
+  float left = -1;
+  float right = -1;
+  float top = -1;
+  float bottom = -1;
+  for (PVector v : blocks) {
+    if (v.x>right || right==-1) {
+      right = v.x;
+    }
+    if (v.x<left || left==-1) {
+      left = v.x;
+    }
+    if (v.y<top || top==-1) {
+      top = v.y;
+    }
+    if (v.y>bottom || bottom==-1) {
+      bottom = v.y;
+    }
+  }
+  return new PVector((abs(right-left)+1), (abs(bottom-top)+1));
+}
+
+public PVector getMaximumShapeSize() {
+  PVector maxSize = new PVector();
+  for (ShapeType shapeType : possibleShapeTypes) {
+    for (int rotation=0;rotation<shapeType.blocks.length;rotation++) {
+      PVector size = getShapeSize(shapeType.blocks[rotation]);
+      if (size.x > maxSize.x) {
+        maxSize.x = size.x;
+      }
+      if (size.y > maxSize.y) {
+        maxSize.y = size.y;
+      }
+    }
+}
+  return maxSize;
 }
 
 ArrayList<ArrayList<String>> colorTypes = new ArrayList<ArrayList<String>>();
