@@ -1,28 +1,42 @@
 HashMap<String,PImage> images = new HashMap<String,PImage>(); 
 
+public void addImageAbsolute(String name, String path) {
+  images.put(name,loadImage(path));
+}
+
 public void addImage(String name, String path) {
-  images.put(name,loadImage("./"+path));
+  String extension = "";
+  int i = path.lastIndexOf('.');
+  if (i <= 0) {
+    path = path+".png";
+  }
+  addImageAbsolute(name, "./"+path);
+}
+
+public void addImage(String name, String path, String fileType) {
+  addImage(name, path+"."+fileType);
 }
 
 public PImage getImage(String img) {
-  PImage result = images.get(img);
-  if (result==null) {
-    images.put(img,loadImage("./"+img));
-  }
-  return result;
+  return images.get(img);
+}
+
+public static String combine (String path1, String path2) {
+    File file1 = new File(path1);
+    File file2 = new File(file1, path2);
+    return file2.getPath();
 }
 
 public void loadAllImages(String dir) {
-  String otherFolder = dir;
-  File folder = new File(dataPath("")+otherFolder);
+  File folder = new File(combine(dataPath(""),dir));
   File[] files = folder.listFiles();
   if (files!=null) {
     for (File fileEntry : files) {
       if (!fileEntry.isDirectory()) {
         String fileName = fileEntry.getName();
         if (fileName.toLowerCase().endsWith(".png") || fileName.toLowerCase().endsWith(".jpg")) {
-          String name = fileName.substring(0,fileName.indexOf("."));
-          addImage(name,otherFolder+fileName);
+          String name = fileName.substring(0,fileName.lastIndexOf("."));
+          addImageAbsolute(name,fileEntry.getPath());
         }
       }
     }
