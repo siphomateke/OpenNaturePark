@@ -3,11 +3,19 @@ boolean paused = false;
 boolean gameover = false;
 boolean newGame = true;
 int animal = 0;
-public void reDrawBackground() {
+public void drawMainBar() {
+  //drawImage(getImage("main_bar"),0,0);
+  drawImage(getImage("main_bar_bg_left"),0,0);
+  drawImage(getImage("main_bar_bg_right"),REALWIDTH-1,0);
+  drawImage(getImage("main_bar_bg_center"),1,0);
+  drawImage(getImage("main_bar_score"),1,0);
+  drawImage(getImage("main_bar_highscore"),REALWIDTH-56-1,0);
+}
+public void drawGameBackground() {
   background(#fefeaa);
   drawImage(getImage("main_bg_left"),0,15);
   drawImage(getImage("main_bg_top"),0,13);
-  drawImage(getImage("main_bar"),0,0);
+  drawMainBar();
   drawImage(getImage("main_bg_bottom"),0,125);
   drawImage(getImage("main_bg_right"),72,15);
   drawImage(getImage("main_boat"),72,59);
@@ -16,15 +24,8 @@ public void reDrawBackground() {
 }
 public void game(float time) {
   if (gameStateChanged) {
-    background(#fefeaa);
-    drawImage(getImage("main_bg_left"),0,15);
-    drawImage(getImage("main_bg_top"),0,13);
-    drawImage(getImage("main_bar"),0,0);
-    drawImage(getImage("main_bg_bottom"),0,125);
-    drawImage(getImage("main_bg_right"),72,15);
-    drawImage(getImage("main_boat"),72,59);
-    drawImage(cropImage("intro_buble",21,0,37,62),107,14);
-    drawImage(getImage("main_wave"),72,121);
+    surface.setSize(width*2,height);
+    drawGameBackground();
     
     // Create the game board
     board = new GameBoard(7,20);
@@ -105,7 +106,7 @@ public void game(float time) {
   if (!paused) {
     board.update(time);
   }
-  reDrawBackground();
+  drawGameBackground();
   drawImage(getImage("main_bg_right"), 72, 15);
   cAnimal.display(72,59);
   board.display();
@@ -154,7 +155,7 @@ public void newGame() {
   if (newGame) {
     newGame = false;
     // Redraw the score bar
-    drawImage(getImage("main_bar"),0,0);
+    drawMainBar();
     // Clear the board
     board.reset();
     score = 0;  
