@@ -15,8 +15,6 @@ public void gameSettings(float time) {
     q = (GTextField) getGUIElement("GridSizeYTextField");
     q.setText(str(YTILES));*/
   }
-  //background(#240254);
-  //background(#9c82e0);
   background(#8abde1);
   drawImage("cloud",0,82);
 }
