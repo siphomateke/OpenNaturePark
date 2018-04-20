@@ -24,3 +24,28 @@ public void drawImageRandom(String img, int num) {
     drawImage(img,int(random(15,REALWIDTH-15)),int(random(15,REALHEIGHT-15)));
   }
 }
+
+public void saveConfig() {
+  JSONObject json = new JSONObject();
+  json.setFloat("version",VERSION);
+  json.setInt("highScore",highScore);
+  json.setInt("numToFastest",numToFastest);
+  saveJSONObject(json, "data/config.json");
+}
+
+public void loadConfig() {
+  File f = new File(dataPath("config.json"));
+  if (f.exists()) {
+    JSONObject json = loadJSONObject("data/config.json");
+    if (json.hasKey("high_score")) {
+      highScore = json.getInt("high_score");
+    }
+    else if (json.hasKey("highScore")) {
+      highScore = json.getInt("highScore");
+    }
+    if (json.hasKey("numToFastest")) {
+      numToFastest = json.getInt("numToFastest");
+    }
+  }
+  updateGameSize();
+}
