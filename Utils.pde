@@ -38,13 +38,27 @@ public PImage cropImage(String name, int x, int y, int w, int h) {
   return g.get(0,0,w,h);
 }
 
-public void drawImage(PImage img, int x, int y) {
+public void drawImage(PImage img, int x, int y, float angle) {
   PVector size = imgToWorldCoords(img);
-  image(img,toWorldX(x),toWorldY(y),size.x,size.y);
+  pushMatrix();
+  translate(toWorldX(x),toWorldY(y));
+  translate(size.x/2,size.y/2);
+  rotate(angle);
+  translate(-size.x/2,-size.y/2);
+  image(img,0,0,size.x,size.y);
+  popMatrix();
+}
+
+public void drawImage(PImage img, int x, int y) {
+  drawImage(img,x,y,0);
+}
+
+public void drawImage(String img, int x, int y, float angle) {
+  drawImage(getImage(img),x,y,angle);
 }
 
 public void drawImage(String img, int x, int y) {
-  drawImage(getImage(img),x,y);
+  drawImage(img,x,y,0);
 }
 
 public PVector imgToWorldCoords(PImage img) {
@@ -59,11 +73,26 @@ public PVector toWorldCoords(PVector coord) {
 }
 
 public float toWorldX(int x) {
-  return (float(x)/float(REALWIDTH))*width;
+  return (float(x)/float(REALWIDTH))*windowWidth;
 }
 
 public float toWorldY(int y) {
   return (float(y)/float(REALHEIGHT))*height;
+}
+
+public PVector toGameCoords(PVector coord) {
+  PVector vec = new PVector();
+  vec.x = toGameX(int(coord.x));
+  vec.y = toGameY(int(coord.y));
+  return vec;
+}
+
+public float toGameX(int x) {
+  return (float(x)/float(windowWidth))*REALWIDTH;
+}
+
+public float toGameY(int y) {
+  return (float(y)/float(height))*REALHEIGHT;
 }
 
 HashMap<String, Boolean> keysDown = new HashMap<String, Boolean>();
@@ -116,4 +145,18 @@ public boolean wasKeyDown(String g) {
     r = false;
   }
   return r;
+}
+
+public void saveConfig() {
+  JSONObject json = new JSONObject();
+  json.setInt("high_score",highScore);
+  saveJSONObject(json, "data/config.json");
+}
+
+public void loadConfig() {
+  File f = new File(dataPath("config.json"));
+  if (f.exists()) {
+    JSONObject json = loadJSONObject("data/config.json");
+    highScore = json.getInt("high_score");
+  }
 }

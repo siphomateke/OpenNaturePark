@@ -1,4 +1,8 @@
 HashMap<String, Float> timers;
+boolean paused = false;
+boolean gameover = false;
+boolean newGame = true;
+int animal = 0;
 public void game(float time) {
   if (gameStateChanged) {
     background(#fefeaa);
@@ -13,119 +17,109 @@ public void game(float time) {
     
     // Create the game board
     board = new GameBoard(7,20);
-    board.setNextPlayer(randomShape());
-    nextPlayer();
     
-    score = 0;
-    highScore = 0;
     timers = new HashMap<String, Float>();
     timers.put("keyLeft",0f);
     timers.put("keyRight",0f);
     timers.put("keyDown",0f);
   }
-  if (isKeyDown("left")) {
-    timers.put("keyLeft",timers.get("keyLeft")+time);
-    if (timers.get("keyLeft")>500) {
-      board.player.move(-1,0);
+  // The current animal
+  Animal cAnimal = animals.get(animalTypes.get(animal)); 
+  if (!gameover && !newGame && !paused) {
+    if (isKeyDown("left")) {
+      timers.put("keyLeft",timers.get("keyLeft")+time);
+      if (timers.get("keyLeft")>500) {
+        board.player.move(-1,0);
+      }
     }
-  }
-  if (isKeyDown("right") && timers.get("keyRight")>200) {
-    timers.put("keyRight",timers.get("keyRight")+time);
-    if (timers.get("keyRight")>500) {
-      board.player.move(1,0);
+    if (isKeyDown("right") && timers.get("keyRight")>200) {
+      timers.put("keyRight",timers.get("keyRight")+time);
+      if (timers.get("keyRight")>500) {
+        board.player.move(1,0);
+      }
     }
-  }
-  
-  if (isKeyDown("up") && !wasKeyDown("up")) {
-    Shape p = board.player; 
-    if (p.blocks.length>0) {
-      p.shift();
+    
+    if (isKeyDown("up") && !wasKeyDown("up")) {
+      Shape p = board.player; 
+      if (p.blocks.length>0) {
+        p.shift();
+      }
     }
+    for (HashMap.Entry<String,Boolean> entry : keysDown.entrySet()) {
+      wereKeysDown.put(entry.getKey(),false);
+      wereKeysDown.put(entry.getKey(),entry.getValue());
+    }
+    timers.put("keyDown",timers.get("keyDown")+time);
+    
+    board.player.checkCollisions();
+    cAnimal.update(time);
+    
+    scoreFont.update(time);
+    comboFont.update(time);
+    // If this is a new high score
+    // Update save file
+    if (score>highScore) {
+      highScore = score;
+      saveConfig();
+    }
+  }  
+  else if (gameover) {
+    cAnimal.setEmotion("sad",10);
+    board.fillUp(time);
   }
-  for (HashMap.Entry<String,Boolean> entry : keysDown.entrySet()) {
-    wereKeysDown.put(entry.getKey(),false);
-    wereKeysDown.put(entry.getKey(),entry.getValue());
+  if (!paused) {
+    board.update(time);
   }
-  timers.put("keyDown",timers.get("keyDown")+time);
-  board.player.checkCollisions();
-  board.update(time);
+  drawImage(getImage("main_bg_right"), 72, 15);
+  cAnimal.display(72,59);
   board.display();
+  if (paused) {
+    drawImage("paused",11,60);
+  }
   scoreFont.write(str(score),65,4);
   scoreFont.write(str(highScore),123,4);
-  scoreFont.update(time);
-  comboFont.update(time);
-  if (score>highScore) {
-    highScore = score;
+  if (combos>2) {
+    drawImage(getImage("combo"), 17, 39);
+    drawImage(getImage("combo_star"), 11, 60);
+    drawImage(getImage("combo_star"), 23, 42);
+    drawImage(getImage("combo_star"), 26, 73);
+    drawImage(getImage("combo_star"), 48, 36);
+    drawImage(getImage("combo_star"), 46, 78);
+    drawImage(getImage("combo_star"), 56, 63);
   }
+  comboFont.display();
+  sim.update(time);
+  sim.display();
 }
 
-public String randomType(String[] types) {
-  return types[int(random(types.length))];
+public void gameOver() {
+  newGame = true;
+  gameover = false;
+  board.setNextPlayer(null);
+  saveConfig();
 }
 
-class NumericFont {
-  HashMap<String, String> imgs;
-  int myWidth;
-  int myHeight;
-  ArrayList<FontText> toWrite;
-  NumericFont(String[][] list) {
-    imgs = new HashMap<String, String>();
-    for (int i=0; i<list.length; i++) {
-      imgs.put(list[i][1], list[i][0]);
-    }
-    PImage p = getImage(list[0][0]);
-    myWidth = p.width+1;
-    myHeight = p.height;
-    toWrite = new ArrayList<FontText>();
-  }
-
-  public String getMyImage(String name) {
-    return imgs.get(name);
-  }
-
-  public void write(String n, int x, int y) {
-    int xWidth = myWidth*n.length();
-    int xOffset = 0;
-    for (int i=0; i<n.length(); i++) { 
-      PImage img = getImage(getMyImage(str(n.charAt(i))));
-      drawImage(img, x-xWidth+xOffset, y);
-      xOffset += myWidth;
-    }
-  }
-  
-  public void writeDelay(String n, int delay, int x, int y) {
-    toWrite.add(new FontText(n,delay,x,y));
-  }
-  
-  public void update (float time) {
-    ArrayList<Integer> toDelete = new ArrayList<Integer>();
-    for (int i=0;i<toWrite.size();i++) {
-      FontText ft = toWrite.get(i);
-      ft.time += time;
-      if (ft.time<ft.len) {
-        write(ft.txt,ft.x,ft.y);
-      }
-      else {
-        toDelete.add(i);
-      }
-    }
-    for (Integer i : toDelete) {
-      toWrite.remove(i);
-    }
-  }
-}
-
-class FontText {
-  String txt;
-  float len;
-  float time;
-  int x;
-  int y;
-  FontText(String txt,float len,int x,int y) {
-    this.txt = txt;
-    this.time = 0f;
-    this.len = len;
-    this.x = x;
-    this.y = y;
+public void newGame() {
+  if (newGame) {
+    newGame = false;
+    // Redraw the score bar
+    drawImage(getImage("main_bar"),0,0);
+    // Clear the board
+    board.reset();
+    score = 0;  
+    // Create the next player
+    board.setNextPlayer(randomShape());
+    nextPlayer();
+    
+    Animal cAnimal = animals.get(animalTypes.get(animal)); 
+    cAnimal.update(time);
+    
+    // Choose a random animal
+    animal = int(random(animals.size()));
+    
+    // Reset the speed back to the original speed
+    speed = initspeed;
+    level = 0;
+    score = 0;
   }
 }
