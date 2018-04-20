@@ -34,10 +34,10 @@ class Particle {
     if (loc.y<0) {
       dead = true;
     }
-    if (loc.x>REALWIDTH) {
+    if (loc.x>gameWidth) {
       dead = true;
     }
-    if (loc.y>REALHEIGHT) {
+    if (loc.y>gameHeight) {
       dead = true;
     }
     age+=time;

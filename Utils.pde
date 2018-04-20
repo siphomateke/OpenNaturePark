@@ -111,11 +111,11 @@ public PVector toWorldCoords(PVector coord) {
 }
 
 public float toWorldX(int x) {
-  return (float(x)/float(REALWIDTH))*windowWidth;
+  return (float(x)/float(gameWidth))*windowWidth;
 }
 
 public float toWorldY(int y) {
-  return (float(y)/float(REALHEIGHT))*height;
+  return (float(y)/float(gameHeight))*windowHeight;
 }
 
 public PVector toGameCoords(PVector coord) {
@@ -126,11 +126,11 @@ public PVector toGameCoords(PVector coord) {
 }
 
 public float toGameX(int x) {
-  return (float(x)/float(windowWidth))*REALWIDTH;
+  return (float(x)/float(windowWidth))*gameWidth;
 }
 
 public float toGameY(int y) {
-  return (float(y)/float(height))*REALHEIGHT;
+  return (float(y)/float(height))*gameHeight;
 }
 
 HashMap<String, Boolean> keysDown = new HashMap<String, Boolean>();

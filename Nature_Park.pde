@@ -10,9 +10,13 @@ int xTiles = 6;
 int yTiles = 10;
 // The actual width of the game on a phone
 // to allow scaling up proportionately
-public static final int REALWIDTH = 128;
-public static final int REALHEIGHT = 128;
+public static final int INTROWIDTH = 128;
+public static final int INTROHEIGHT = 128;
+int gameWidth = 256;
+int gameHeight = 128;
+float gameScale = 2;
 int windowWidth = 0;
+int windowHeight = 0;
 int padding = 0;
 
 GameBoard board;
@@ -45,12 +49,12 @@ NumericFont comboFont;
 PVector center;
 
 void setup() {
-  size(256,256);
+  size(512,256);
   //fullScreen();
   noSmooth();
-  center = new PVector(width/2,height/2);
   windowWidth = width;
-  padding = ((width-windowWidth)/2);
+  windowHeight = height;
+  center = new PVector(width/2,height/2);
   // Load all images in the data directory
   loadAllImages("/");
   // Generate all the different block types
@@ -104,12 +108,6 @@ void draw() {
   }
   prevGameState = gameState;
   
-  noStroke();
-  fill(50);
-  rect(0,0,padding,height);
-  rect(padding+windowWidth,0,padding,height);
-  translate(padding,0);
-  noFill();
   switch (gameState) {
     case STATEINTRO:
       intro(time);

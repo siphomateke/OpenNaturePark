@@ -58,13 +58,13 @@ public void initGUI() {
     scaleImageToWorld("exit_button3")
   }));*/
   
-  addGUIElement("BackButtonGame",STATEGAME,new GImageButton(this, toWorldX(110), toWorldY(16), toWorldX(14), toWorldY(14), new String[]{
+  addGUIElement("BackButtonGame",STATEGAME,new GImageButton(this, toWorldX(gameWidth-18), toWorldY(16), toWorldX(14), toWorldY(14), new String[]{
     scaleImageToWorld("back_button"),
     scaleImageToWorld("back_button2"),
     scaleImageToWorld("back_button3")
   }));
   
-  addGUIElement("RestartButton",STATEGAME,new GImageButton(this, toWorldX(110), toWorldY(32), toWorldX(14), toWorldY(14), new String[]{
+  addGUIElement("RestartButton",STATEGAME,new GImageButton(this, toWorldX(gameWidth-18), toWorldY(32), toWorldX(14), toWorldY(14), new String[]{
     scaleImageToWorld("restart_button"),
     scaleImageToWorld("restart_button2"),
     scaleImageToWorld("restart_button3")

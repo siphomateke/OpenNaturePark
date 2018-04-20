@@ -21,8 +21,18 @@ public void gameSettings(float time) {
 
 public void drawImageRandom(String img, int num) {
   for (int i=0;i<num;i++) {
-    drawImage(img,int(random(15,REALWIDTH-15)),int(random(15,REALHEIGHT-15)));
+    drawImage(img,int(random(15,gameWidth-15)),int(random(15,gameHeight-15)));
   }
+}
+
+public void updateGameSize() {
+  makeGameBoard();
+  int newWidth = board.getRightEdge()+getImage("main_bg_right").width;
+  surface.setSize(int((newWidth)*gameScale),height);  
+  gameWidth = newWidth;
+  windowWidth = width;
+  windowHeight = height;
+  //initGUI();
 }
 
 public void saveConfig() {

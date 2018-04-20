@@ -6,6 +6,7 @@ public void intro(float time) {
     drawImage("intro_frame",0,0);
     drawImage("main_boat",38,53);*/
     introAnimal = randomAnimalName();
+    surface.setSize(int(INTROWIDTH*gameScale),int(INTROHEIGHT*gameScale));
   }
   
   animals.get(introAnimal).update(time);

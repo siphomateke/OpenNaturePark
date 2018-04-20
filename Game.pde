@@ -6,29 +6,40 @@ int animal = 0;
 public void drawMainBar() {
   //drawImage(getImage("main_bar"),0,0);
   drawImage(getImage("main_bar_bg_left"),0,0);
-  drawImage(getImage("main_bar_bg_right"),REALWIDTH-1,0);
-  drawImage(getImage("main_bar_bg_center"),1,0);
+  drawImage(getImage("main_bar_bg_right"),gameWidth-1,0);
+  for (int x=0;x<gameWidth-2;x++) {
+    drawImage(getImage("main_bar_bg_center"),1+x,0);
+  }
   drawImage(getImage("main_bar_score"),1,0);
-  drawImage(getImage("main_bar_highscore"),REALWIDTH-56-1,0);
+  drawImage(getImage("main_bar_highscore"),gameWidth-getImage("main_bar_highscore").width-3,0);
 }
 public void drawGameBackground() {
   background(#fefeaa);
   drawImage(getImage("main_bg_left"),0,15);
-  drawImage(getImage("main_bg_top"),0,13);
+  int r = (gameWidth/getImage("main_bg_top").width)+1;
+  for (int x=0;x<r;x++) {
+    drawImage(getImage("main_bg_top"),x*getImage("main_bg_top").width,13);
+  }
   drawMainBar();
-  drawImage(getImage("main_bg_bottom"),0,125);
-  drawImage(getImage("main_bg_right"),72,15);
+  r = (gameWidth/getImage("main_bg_bottom").width)+1;
+  for (int x=0;x<r;x++) {
+    drawImage(getImage("main_bg_bottom"),x*getImage("main_bg_bottom").width,125);
+  }
+  drawImage(getImage("main_bg_right"),gameWidth-getImage("main_bg_right").width,15);
   drawImage(getImage("main_boat"),72,59);
   drawImage(cropImage("intro_buble",21,0,37,62),107,14);
   drawImage(getImage("main_wave"),72,121);  
 }
+public void makeGameBoard() {
+  board = new GameBoard(7,20);  
+}
 public void game(float time) {
   if (gameStateChanged) {
-    surface.setSize(width*2,height);
+    updateGameSize();
     drawGameBackground();
     
     // Create the game board
-    board = new GameBoard(7,20);
+    makeGameBoard();
     
     timers = new HashMap<String, Float>();
     timers.put("keyLeft",0f);
@@ -107,7 +118,6 @@ public void game(float time) {
     board.update(time);
   }
   drawGameBackground();
-  drawImage(getImage("main_bg_right"), 72, 15);
   cAnimal.display(72,59);
   board.display();
   if (paused) {
@@ -115,7 +125,7 @@ public void game(float time) {
   }
   drawImageStack(time);
   scoreFont.write(str(score),65,4);
-  scoreFont.write(str(highScore),123,4);
+  scoreFont.write(str(highScore),gameWidth-3,4);
   /*if (combos>2) {
     drawImage(getImage("combo"), 17, 39);
     drawImage(getImage("combo_star"), 11, 60);

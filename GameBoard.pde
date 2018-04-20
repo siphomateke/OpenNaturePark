@@ -60,6 +60,19 @@ class GameBoard {
     img = g;
     imgSize = imgToWorldCoords(img);
   }
+  public int getWidth() {
+    int w = 0;
+    PImage bi = getImage("bg_border_tile");
+    w += bi.width*2;
+    w += xTiles*TILESIZE;
+    return w;
+  }
+  public int getRightEdge() {
+    return this.xOffset-getImage("bg_border_tile").width+this.getWidth();
+  }
+  public int getLeftEdge() {
+    return this.xOffset-getImage("bg_border_tile").width;
+  }
   // Reset the board
   // called when game is over
   public void reset() {
@@ -101,7 +114,10 @@ class GameBoard {
     }
     translate(-offset.x, -offset.y);
     if (nextPlayer!=null) {
-      float x1 = toWorldX(86 -((nextPlayer.right-nextPlayer.left+1) *TILESIZE )/2);
+      //float x1 = toWorldX(86 -((nextPlayer.right-nextPlayer.left+1) *TILESIZE )/2);
+      //float y1 = toWorldY(38 -((nextPlayer.bottom-nextPlayer.top+1) * TILESIZE)/2);
+      println(this.getRightEdge());
+      float x1 = toWorldX(this.getRightEdge()+14-(((nextPlayer.right-nextPlayer.left+1)*TILESIZE )/2));
       float y1 = toWorldY(38 -((nextPlayer.bottom-nextPlayer.top+1) * TILESIZE)/2);
       translate(x1, y1);
       nextPlayer.display(false);
