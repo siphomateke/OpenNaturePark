@@ -1,13 +1,13 @@
 HashMap<String,PImage> images = new HashMap<String,PImage>(); 
 
 public void addImage(String name, String path) {
-  images.put(name,loadImage(path));
+  images.put(name,loadImage("./"+path));
 }
 
 public PImage getImage(String img) {
   PImage result = images.get(img);
   if (result==null) {
-    images.put(img,loadImage(img));
+    images.put(img,loadImage("./"+img));
   }
   return result;
 }
