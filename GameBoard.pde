@@ -5,12 +5,14 @@ class GameBoard {
   Block[][] tiles;
   Shape player;
   Shape nextPlayer;
+  GraphicRegion nextPlayerRegion;
   PImage img;
   PVector imgSize;
   float timer;
   float timer2;
   int fillProgress;
   float fillTimer;
+  private PImage borderImage;
   GameBoard(int xOffset, int yOffset) {
     // The offset to draw the game board
     this.xOffset = xOffset;
@@ -24,7 +26,13 @@ class GameBoard {
         setBlock(x, y, "blank");
       }
     }
-    //img = getImage("main_bg_main");
+
+    borderImage = getImage("bg_border_tile");
+
+    int w = int(getMaximumShapeSize().x * TILESIZE);
+    int h = int(getMaximumShapeSize().y * TILESIZE);
+    nextPlayerRegion = new GraphicRegion(this.getVisibleWidth(), borderImage.height, w, h, 2);
+
     generateBackground();
     // Timer to keep track of when to next update
     timer = 0;
@@ -32,46 +40,91 @@ class GameBoard {
     fillProgress = 0;
     fillTimer = 0;
   }
-  public void generateBackground() {
-    PImage bi = getImage("bg_border_tile");
-    PGraphics g = createGraphics((xTiles*TILESIZE)+(bi.width*2),(yTiles*TILESIZE)+(bi.height*2));
-    g.beginDraw();
+  public void drawBorder(PGraphics g, int offsetX, int offsetY, int width, int height) {
+    // Width and height border inclusive
+    int w = width + (borderImage.width * 2);
+    int h = height + (borderImage.height * 2);
+    // Create new graphics object to crop output
+    PGraphics cropped = createGraphics(w,h);
+    cropped.beginDraw();
+    cropped.pushMatrix();
     // Draw the border tiles at the top and bottom of the screen
-    for (int x=0;x<(g.width)/(bi.width-1);x++) {
+    for (int x=0;x<w/(borderImage.width-1);x++) {
       for (int y=0;y<2;y++) {
-        g.image(bi,x*(bi.width-1),y*((yTiles*TILESIZE)+(bi.height)));
+        cropped.image(borderImage,x*(borderImage.width-1),y*(height+borderImage.height));
       }
     }
     // Draw the border tiles on the left and right of the screen
-    for (int y=0;y<(g.height)/(bi.height-1);y++) {
+    for (int y=0;y<h/(borderImage.height-1);y++) {
       for (int x=0;x<2;x++) {
-        g.image(bi,x*((xTiles*TILESIZE)+(bi.width)),y*(bi.height-1));
+        cropped.image(borderImage,x*(width+borderImage.width),y*(borderImage.height-1));
       }
     }
+    cropped.popMatrix();
+    cropped.endDraw();
+
+    g.pushMatrix();
+    g.translate(offsetX, offsetY);
+    g.translate(-borderImage.width, -borderImage.height);
+    g.image(cropped,0,0);
+    g.popMatrix();
+  }
+  public void drawNextPlayerBackground(PGraphics g) {
+    g.noStroke();
+    g.fill(#ffffab);
+    g.rect(
+      nextPlayerRegion.x,
+      nextPlayerRegion.y,
+      nextPlayerRegion.width,
+      nextPlayerRegion.height);
+    g.fill(255,255,171);
+    drawBorder(g, 
+      nextPlayerRegion.x,
+      nextPlayerRegion.y,
+      nextPlayerRegion.width,
+      nextPlayerRegion.height);
+  }
+  public void generateBackground() {
+    int h = getVisibleHeight();
+    int w = getVisibleWidth()+nextPlayerRegion.width+borderImage.width;
+    if (h < nextPlayerRegion.height) {
+      h = nextPlayerRegion.height;
+    }
+    PGraphics g = createGraphics(w,h);
+    g.beginDraw();
+    
+    drawBorder(g, borderImage.width, borderImage.height, getWidth(), getHeight());
+    drawNextPlayerBackground(g);
+    
     // Draw the actual game background tiles
+    g.translate(borderImage.width, borderImage.height);
     PImage i = getImage("bg_tile");
     for (int x=0; x<xTiles; x++) {
       for (int y=0; y<yTiles; y++) {
-        g.image(i, (x*TILESIZE)+(bi.width), (y*TILESIZE)+(bi.height));
+        g.image(i, x*TILESIZE, y*TILESIZE);
       }
     }
-    g.image(getImage("bg_edge"), (xTiles*TILESIZE)+(bi.width), (bi.height));
     g.endDraw();
     img = g;
     imgSize = imgToWorldCoords(img);
   }
   public int getWidth() {
-    int w = 0;
-    PImage bi = getImage("bg_border_tile");
-    w += bi.width*2;
-    w += xTiles*TILESIZE;
-    return w;
+    return xTiles * TILESIZE;
+  }
+  public int getHeight() {
+    return yTiles * TILESIZE;
+  }
+  public int getVisibleWidth() {
+    return getWidth() + borderImage.width*2;
+  }
+  public int getVisibleHeight() {
+    return getHeight() + borderImage.height*2;
   }
   public int getRightEdge() {
-    return this.xOffset-getImage("bg_border_tile").width+this.getWidth();
+    return this.xOffset+this.getVisibleWidth();
   }
   public int getLeftEdge() {
-    return this.xOffset-getImage("bg_border_tile").width;
+    return this.xOffset;
   }
   // Reset the board
   // called when game is over
@@ -93,15 +146,27 @@ class GameBoard {
     nextPlayer = s;
   }
 
+  public void drawNextPlayer() {
+    if (nextPlayer!=null) {
+      pushMatrix();
+      PVector nextPlayerCenter = nextPlayer.getCenter().mult(TILESIZE);
+      float x1 = nextPlayerRegion.x + (nextPlayerRegion.width / 2) - nextPlayerCenter.x;
+      float y1 = nextPlayerRegion.y + (nextPlayerRegion.height / 2) - nextPlayerCenter.y;
+      translate(toWorldX(int(x1)), toWorldY(int(y1)));
+      nextPlayer.display(false);
+      popMatrix();
+    }
+  }
+
   public void display() {
     pushMatrix();
     translate(offset.x, offset.y);
     // The offset of the image
-    PVector v = toWorldCoords(new PVector(-5, -5));
-    translate(v.x, v.y);
     image(img, 0, 0, imgSize.x, imgSize.y);
-    translate(-v.x, -v.y);
 
+    drawNextPlayer();
+
+    g.translate(toWorldX(borderImage.width), toWorldY(borderImage.height));
     // Draw all the tiles on the board
     for (int x=0; x<xTiles; x++) {
       for (int y=0; y<yTiles; y++) {
@@ -111,16 +176,6 @@ class GameBoard {
     // Draw the player shape
     if (player!=null) {
       player.display(true);
-    }
-    translate(-offset.x, -offset.y);
-    if (nextPlayer!=null) {
-      //float x1 = toWorldX(86 -((nextPlayer.right-nextPlayer.left+1) *TILESIZE )/2);
-      //float y1 = toWorldY(38 -((nextPlayer.bottom-nextPlayer.top+1) * TILESIZE)/2);
-      println(this.getRightEdge());
-      float x1 = toWorldX(this.getRightEdge()+14-(((nextPlayer.right-nextPlayer.left+1)*TILESIZE )/2));
-      float y1 = toWorldY(38 -((nextPlayer.bottom-nextPlayer.top+1) * TILESIZE)/2);
-      translate(x1, y1);
-      nextPlayer.display(false);
     }
     popMatrix();
   }

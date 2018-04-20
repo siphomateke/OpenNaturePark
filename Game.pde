@@ -21,17 +21,9 @@ public void drawGameBackground() {
     drawImage(getImage("main_bg_top"),x*getImage("main_bg_top").width,13);
   }
   drawMainBar();
-  r = (gameWidth/getImage("main_bg_bottom").width)+1;
-  for (int x=0;x<r;x++) {
-    drawImage(getImage("main_bg_bottom"),x*getImage("main_bg_bottom").width,125);
-  }
-  drawImage(getImage("main_bg_right"),gameWidth-getImage("main_bg_right").width,15);
-  drawImage(getImage("main_boat"),72,59);
-  drawImage(cropImage("intro_buble",21,0,37,62),107,14);
-  drawImage(getImage("main_wave"),72,121);  
 }
 public void makeGameBoard() {
-  board = new GameBoard(7,20);  
+  board = new GameBoard(3,15);  
 }
 public void game(float time) {
   if (gameStateChanged) {

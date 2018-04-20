@@ -183,4 +183,44 @@ public boolean wasKeyDown(String g) {
     r = false;
   }
   return r;
+} }
+  return r;
+}
+
+public boolean wasKeyDown(String g) {
+  boolean r = false;
+  if (wereKeysDown.containsKey(g)) {
+    if (wereKeysDown.get(g)) {
+      r = true;
+    }
+  } else {
+    r = false;
+  }
+  return r;
+}
+
+class GraphicRegion {
+  int margin;
+  int x;
+  int y;
+  int width;
+  int height;
+  int innerX;
+  int innerY;
+  int innerWidth;
+  int innerHeight;
+  GraphicRegion(int x, int y, int width, int height, int margin) {
+    this.x = x;
+    this.y = y;
+    this.margin = margin;
+    this.innerX = this.x + this.margin;
+    this.innerY = this.y + this.margin;
+    this.innerWidth = width;
+    this.innerHeight = height;
+    this.width = this.innerWidth + (this.margin * 2);
+    this.height = this.innerHeight + (this.margin * 2);
+  }
+  GraphicRegion(int x, int y, int width, int height) {
+    this(x, y, width, height, 0);
+  }
 }

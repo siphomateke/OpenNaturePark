@@ -43,6 +43,12 @@ class Shape {
     top += y;
     bottom += y;
   }
+  public PVector getCenter() {
+    return new PVector(
+      (right - left + 1) / 2.0f,
+      (bottom - top + 1) / 2.0f
+    );
+  }
   public void toBoard() {
     while (bottom<yTiles-1 && !colliding(x, y+1)) {
       this.y++;
@@ -190,7 +196,7 @@ public PVector getMaximumShapeSize() {
         maxSize.y = size.y;
       }
     }
-}
+  }
   return maxSize;
 }
 
