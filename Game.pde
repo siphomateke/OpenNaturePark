@@ -4,14 +4,16 @@ boolean gameover = false;
 boolean newGame = true;
 int animal = 0;
 public void drawMainBar() {
-  //drawImage(getImage("main_bar"),0,0);
-  drawImage(getImage("main_bar_bg_left"),0,0);
-  drawImage(getImage("main_bar_bg_right"),gameWidth-1,0);
-  for (int x=0;x<gameWidth-2;x++) {
-    drawImage(getImage("main_bar_bg_center"),1+x,0);
+  PImage left = getImage("main_bar_bg_left");
+  PImage right = getImage("main_bar_bg_right");
+  drawImage(left,0,0);
+  for (int x=0;x<gameWidth-right.width-left.width;x++) {
+    drawImage(getImage("main_bar_bg_center"),left.width+x,0);
   }
+  drawImage(right,gameWidth-right.width,0);
   drawImage(getImage("main_bar_score"),1,0);
-  drawImage(getImage("main_bar_highscore"),gameWidth-getImage("main_bar_highscore").width-3,0);
+  PImage highScore = getImage("main_bar_highscore");
+  drawImage(highScore,gameWidth-highScore.width-3,0);
 }
 public void drawGameBackground() {
   background(#fefeaa);
