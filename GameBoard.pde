@@ -120,11 +120,17 @@ class GameBoard {
   public int getVisibleHeight() {
     return getHeight() + borderImage.height*2;
   }
-  public int getRightEdge() {
-    return this.xOffset+this.getVisibleWidth();
-  }
   public int getLeftEdge() {
     return this.xOffset;
+  }
+  public int getRightEdge() {
+    return this.getLeftEdge()+this.getVisibleWidth();
+  }
+  public int getTopEdge() {
+    return this.yOffset;
+  }
+  public int getBottomEdge() {
+    return this.getTopEdge()+this.getVisibleHeight();
   }
   // Reset the board
   // called when game is over

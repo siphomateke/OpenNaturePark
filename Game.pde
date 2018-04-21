@@ -34,6 +34,7 @@ public void game(float time) {
     
     int nextPlayerSize = int(TILESIZE * getMaximumShapeSize().x);
     gameWidth = board.getRightEdge()+nextPlayerSize+(TILESIZE * 4);
+    gameHeight = board.getBottomEdge();
     updateGameSize();
     
     timers = new HashMap<String, Float>();
