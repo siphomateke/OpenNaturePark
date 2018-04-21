@@ -54,6 +54,12 @@ void setup() {
   noSmooth();
   // Load all images in the data directory
   loadAllImages("/");
+  loadAllImages("board/");
+  loadAllImages("buttons/");
+  loadAllImages("numbers/");
+  loadAllImages("blocks/");
+  loadAllImages("text/");
+  loadAllImages("gui/");
   // Generate all the different block types
   generateBlocks();
   // Generate all the animals
@@ -72,16 +78,16 @@ void setup() {
   sim = new ParticleSim();
   
   scoreFont = new NumericFont(new String[][] {
-      {"00", "0"}, 
-      {"01", "1"},
-      {"02", "2"},
-      {"03", "3"},
-      {"04", "4"},
-      {"05", "5"},
-      {"06", "6"},
-      {"07", "7"},
-      {"08", "8"},
-      {"09", "9"},
+      {"0", "0"}, 
+      {"1", "1"},
+      {"2", "2"},
+      {"3", "3"},
+      {"4", "4"},
+      {"5", "5"},
+      {"6", "6"},
+      {"7", "7"},
+      {"8", "8"},
+      {"9", "9"},
   });
   comboFont = new NumericFont(new String[][] {
       {"combo_0", "0"}, 

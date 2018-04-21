@@ -16,12 +16,7 @@ public void drawMainBar() {
   drawImage(highScore,gameWidth-highScore.width-3,0);
 }
 public void drawGameBackground() {
-  background(#fefeaa);
-  drawImage(getImage("main_bg_left"),0,15);
-  int r = (gameWidth/getImage("main_bg_top").width)+1;
-  for (int x=0;x<r;x++) {
-    drawImage(getImage("main_bg_top"),x*getImage("main_bg_top").width,13);
-  }
+  background(36,182,255);
   drawMainBar();
 }
 public void makeGameBoard() {
@@ -116,7 +111,7 @@ public void game(float time) {
     board.update(time);
   }
   drawGameBackground();
-  cAnimal.display(72,59);
+  // cAnimal.display(gameWidth-50,gameHeight-50);
   board.display();
   if (paused) {
     drawImage("paused",11,60);
