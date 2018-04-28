@@ -26,16 +26,20 @@ public void addGUIElement(String name, int state, GAbstractControl control) {
   GUINames.add(new GUIElement(name,state,control));
 }
 
-public GAbstractControl getGUIElement(String name) {
-  GAbstractControl c = null;
+public GUIElement getGUIElement(String name) {
+  GUIElement element = null;
   searchLoop:
   for (GUIElement e : GUINames) {
     if (e.name==name) {
-      c = e.control;
+      element = e;
       break searchLoop;
     }
   }
-  return c;
+  return element;
+}
+
+public GAbstractControl getGUIControl(String name) {
+  return getGUIElement(name).control;
 }
 
 ArrayList<GUIElement> GUINames;
@@ -67,7 +71,7 @@ public void initGUI() {
   
   addGUIElement("SpeedSliderLabel",STATESETTINGS,new GLabel(this, toWorldX(10), toWorldY(5), toWorldX(50), toWorldY(20), "Acceleration: "));
   addGUIElement("SpeedSlider",STATESETTINGS,new GSlider(this, toWorldX(55), toWorldY(5), toWorldX(60), toWorldY(20), 15));
-  GSlider s = (GSlider) getGUIElement("SpeedSlider");
+  GSlider s = (GSlider) getGUIControl("SpeedSlider");
   s.setLimits(200f,50f,500f);
   s.setNumberFormat(0,1);
   s.setShowLimits(true);
@@ -80,9 +84,9 @@ public void initGUI() {
   addGUIElement("GridSizeTimesLabel",STATESETTINGS,new GLabel(this, toWorldX(77), toWorldY(25), toWorldX(50), toWorldY(20), "x"));
   addGUIElement("GridSizeYTextField",STATESETTINGS,new GTextField(this, toWorldX(90), toWorldY(30), toWorldX(20), toWorldY(10)));
   
-  GTextField q = (GTextField) getGUIElement("GridSizeXTextField");
+  GTextField q = (GTextField) getGUIControl("GridSizeXTextField");
   q.setText(str(xTiles));
-  q = (GTextField) getGUIElement("GridSizeYTextField");
+  q = (GTextField) getGUIControl("GridSizeYTextField");
   q.setText(str(yTiles));
   
   addGUIElement("BackButtonSettings",STATESETTINGS,new GImageButton(this, toWorldX(100), toWorldY(100), toWorldX(14), toWorldY(14), new String[]{
@@ -134,10 +138,10 @@ public void handleButtonEvents(GImageButton button, GEvent event) {
     gameState = STATEINTRO;
   }
   if (name=="SaveButton" && gameState==STATESETTINGS) {
-    GValueControl s = (GValueControl) getGUIElement("SpeedSlider");
+    GValueControl s = (GValueControl) getGUIControl("SpeedSlider");
     numToFastest = s.getValueI();
-    GTextField qx = (GTextField) getGUIElement("GridSizeXTextField");
-    GTextField qy = (GTextField) getGUIElement("GridSizeYTextField");
+    GTextField qx = (GTextField) getGUIControl("GridSizeXTextField");
+    GTextField qy = (GTextField) getGUIControl("GridSizeYTextField");
     xTiles = int(qx.getText());
     yTiles = int(qy.getText());
     saveConfig();

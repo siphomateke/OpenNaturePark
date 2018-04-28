@@ -1,11 +1,11 @@
 public void gameSettings(float time) {
   if (gameStateChanged) {
     // Set the settings to their current value
-    GSlider s = (GSlider) getGUIElement("SpeedSlider");
+    GSlider s = (GSlider) getGUIControl("SpeedSlider");
     s.setValue(numToFastest);
-    GTextField q = (GTextField) getGUIElement("GridSizeXTextField");
+    GTextField q = (GTextField) getGUIControl("GridSizeXTextField");
     q.setText(str(xTiles));
-    q = (GTextField) getGUIElement("GridSizeYTextField");
+    q = (GTextField) getGUIControl("GridSizeYTextField");
     q.setText(str(yTiles));
   }
   background(#8abde1);
