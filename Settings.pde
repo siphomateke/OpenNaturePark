@@ -6,11 +6,11 @@ public void gameSettings(float time) {
   if (gameStateChanged) {
     // Set the settings to their current value
     GSlider s = (GSlider) getGUIControl("SpeedSlider");
-    s.setValue(config.get("numToFastest"));
+    s.setValue(config.getInt("numToFastest"));
     GTextField q = (GTextField) getGUIControl("GridSizeXTextField");
-    q.setText(str(config.get("xTiles")));
+    q.setText(str(config.getInt("xTiles")));
     q = (GTextField) getGUIControl("GridSizeYTextField");
-    q.setText(str(config.get("yTiles")));
+    q.setText(str(config.getInt("yTiles")));
   }
   background(#8abde1);
 }
@@ -52,16 +52,31 @@ class ConfigLoadError extends Exception {
   }
 }
 
+public enum ConfigTypes {
+  INTEGER,
+  FLOAT,
+  STRING,
+  BOOLEAN
+}
+
 // Config singleton
 class Config extends Observable {
   public String version;
   public String loadPath;
   public String savePath;
-  public HashMap<String, Integer> intConfigs;
+  public HashMap<String, ConfigTypes> configTypes;
+  public HashMap<String, Object> configs;
   Config(String defaultPath) {
-    // Integer configurations
-    this.intConfigs = new HashMap<String, Integer>();
     this.version = VERSION;
+    
+    this.configs = new HashMap<String, Object>();
+    this.configTypes = new HashMap<String, ConfigTypes>();
+    configTypes.put("highScore", ConfigTypes.INTEGER);
+    configTypes.put("xTiles", ConfigTypes.INTEGER);
+    configTypes.put("yTiles", ConfigTypes.INTEGER);
+    configTypes.put("numToFastest", ConfigTypes.INTEGER);
+
+    // Currently it's just determined from the default value
     this.set("highScore", 0);
     this.set("xTiles", 6);
     this.set("yTiles", 10);
@@ -73,13 +88,14 @@ class Config extends Observable {
     this.savePath = defaultPath;
   }
   public boolean hasProp(String name) {
-    boolean intHas = this.intConfigs.containsKey(name);
-    return intHas;
+    return this.configs.containsKey(name);
   }
-  public boolean set(String name, int val, boolean notify) {
+  public boolean set(String name, Object val, boolean notify) {
+    // FIXME: Add equal check for string
+    // FIXME: equality not working at all
     boolean shouldSet = !this.hasProp(name) || (this.hasProp(name) && val != this.get(name));
     if (shouldSet) {
-      this.intConfigs.put(name, val);
+      this.configs.put(name, val);
       this.setChanged();
 
       if (notify) {
@@ -90,20 +106,32 @@ class Config extends Observable {
       return false;
     }
   }
-  public boolean set(String name, int val) {
+  public boolean set(String name, Object val) {
     return this.set(name, val, true);
   }
-  public Integer get(String name) {
-    for (String name2 : this.intConfigs.keySet()) {
+  public Object get(String name) {
+    for (String name2 : this.configs.keySet()) {
       if (name2 == name) {
-        return this.intConfigs.get(name2);
+        return this.configs.get(name2);
       }
     }
     return null;
   }
+  public Integer getInt(String name) {
+    return (Integer) this.get(name);
+  }
+  public String getString(String name) {
+    return (String) this.get(name);
+  }
+  public Float getFloat(String name) {
+    return (Float) this.get(name);
+  }
+  public Boolean getBoolean(String name) {
+    return (Boolean) this.get(name);
+  }
   public void loadDefault() {
     ArrayList<String> changed = new ArrayList<String>();
-    for (String name : this.intConfigs.keySet()) {
+    for (String name : this.configs.keySet()) {
       changed.add(name);
     }
     this.setChanged();
@@ -133,9 +161,22 @@ class Config extends Observable {
         }
 
         ArrayList<String> allChanged = new ArrayList<String>();
-        for (String name : this.intConfigs.keySet()) {
+        for (String name : this.configTypes.keySet()) {
           if (json.hasKey(name)) {
-            int val = json.getInt(name);
+            Object val = null;
+            ConfigTypes type = this.configTypes.get(name);
+            if (type == ConfigTypes.INTEGER) {
+              val = json.getInt(name);
+            }
+            if (type == ConfigTypes.STRING) {
+              val = json.getString(name);
+            }
+            if (type == ConfigTypes.FLOAT) {
+              val = json.getFloat(name);
+            }
+            if (type == ConfigTypes.BOOLEAN) {
+              val = json.getBoolean(name);
+            }
             boolean changed = this.set(name, val, false);
             if (changed) {
               allChanged.add(name);
@@ -160,8 +201,21 @@ class Config extends Observable {
     // TODO: min and max num tiles
     JSONObject json = new JSONObject();
     json.setString("version", this.version);
-    for (String name : this.intConfigs.keySet()) {
-      json.setInt(name, this.intConfigs.get(name));
+    for (String name : this.configs.keySet()) {
+      Object val = this.configs.get(name);
+      ConfigTypes type = this.configTypes.get(name);
+      if (type == ConfigTypes.INTEGER) {
+        json.setInt(name, (Integer) val);
+      }
+      if (type == ConfigTypes.STRING) {
+        json.setString(name, (String) val);
+      }
+      if (type == ConfigTypes.FLOAT) {
+        json.setFloat(name, (Float) val);
+      }
+      if (type == ConfigTypes.BOOLEAN) {
+        json.setBoolean(name, (Boolean) val);
+      }
     }
     saveJSONObject(json, path);
   }

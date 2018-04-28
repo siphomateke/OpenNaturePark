@@ -73,7 +73,7 @@ public void game(float time) {
     comboFont.update(time);
     // If this is a new high score
     // Update save file
-    if (score>config.get("highScore")) {
+    if (score>config.getInt("highScore")) {
       config.set("highScore", score);
       config.save();
     }

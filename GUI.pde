@@ -89,9 +89,9 @@ public void initGUI() {
   addGUIElement("GridSizeYTextField",STATESETTINGS,new GTextField(this, 0, 0, toWorldX(20), toWorldY(10)));
   
   GTextField q = (GTextField) getGUIControl("GridSizeXTextField");
-  q.setText(str(config.get("xTiles")));
+  q.setText(str(config.getInt("xTiles")));
   q = (GTextField) getGUIControl("GridSizeYTextField");
-  q.setText(str(config.get("yTiles")));
+  q.setText(str(config.getInt("yTiles")));
   
   addGUIElement("BackButtonSettings",STATESETTINGS,new GImageButton(this, 0, 0, toWorldX(14), toWorldY(14), new String[]{
     scaleImageToWorld("back_button"),

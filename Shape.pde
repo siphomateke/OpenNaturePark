@@ -50,7 +50,7 @@ class Shape {
     );
   }
   public void toBoard() {
-    while (bottom<config.get("yTiles")-1 && !colliding(x, y+1)) {
+    while (bottom<config.getInt("yTiles")-1 && !colliding(x, y+1)) {
       this.y++;
       updateBounds();
     }
@@ -76,8 +76,8 @@ class Shape {
     if (left<0) {
       x = 0;
     }
-    if (right>config.get("xTiles")-1) {
-      x -= right-(config.get("xTiles")-1);
+    if (right>config.getInt("xTiles")-1) {
+      x -= right-(config.getInt("xTiles")-1);
     }
     updateBounds();
   }
@@ -92,7 +92,7 @@ class Shape {
     timer+=delta;
     if (timer>speed) {
       // Move the shape down if it's not hitting the bottom
-      if (bottom<config.get("yTiles")-1 && !colliding(x, y+1)) {
+      if (bottom<config.getInt("yTiles")-1 && !colliding(x, y+1)) {
         this.y++;
       }
       // If it hits the bottom add this to the board
@@ -329,7 +329,7 @@ public void nextPlayer() {
   board.setPlayer(board.nextPlayer);
   board.setNextPlayer(randomShape());
   if (speed>fastestSpeed) {
-    speed-=((initspeed-fastestSpeed)/config.get("numToFastest"));
+    speed-=((initspeed-fastestSpeed)/config.getInt("numToFastest"));
     level = (initspeed-speed) / ((initspeed-fastestSpeed)/numLevels);
   }
 }
