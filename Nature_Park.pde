@@ -62,8 +62,6 @@ void setup() {
   loadAllImages("gui/");
   // Generate all the different block types
   generateBlocks();
-  // Generate all the animals
-  addAnimals();
   
   initRandomShapeGen();
 

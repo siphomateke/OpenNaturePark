@@ -2,7 +2,6 @@ HashMap<String, Float> timers;
 boolean paused = false;
 boolean gameover = false;
 boolean newGame = true;
-int animal = 0;
 public void drawMainBar() {
   PImage left = getImage("main_bar_bg_left");
   PImage right = getImage("main_bar_bg_right");
@@ -42,8 +41,6 @@ public void game(float time) {
     timers.put("gameStart2",0f);
     timers.put("gameStart3",0f);
   }
-  // The current animal
-  Animal cAnimal = animals.get(animalTypes.get(animal)); 
   if (!gameover && !newGame && !paused) {
     if (isKeyDown("left")) {
       timers.put("keyLeft",timers.get("keyLeft")+time);
@@ -71,7 +68,6 @@ public void game(float time) {
     timers.put("keyDown",timers.get("keyDown")+time);
     
     board.player.checkCollisions();
-    cAnimal.update(time);
     
     scoreFont.update(time);
     comboFont.update(time);
@@ -83,7 +79,6 @@ public void game(float time) {
     }
   }  
   else if (gameover) {
-    cAnimal.setEmotion("sad",10);
     board.fillUp(time);
   }
   /*else if (newGame) {
@@ -111,7 +106,6 @@ public void game(float time) {
     board.update(time);
   }
   drawGameBackground();
-  // cAnimal.display(gameWidth-50,gameHeight-50);
   board.display();
   if (paused) {
     drawImage("paused",11,60);
@@ -165,12 +159,6 @@ public void newGame() {
     // Create the next player
     board.setNextPlayer(randomShape());
     nextPlayer();
-    
-    Animal cAnimal = animals.get(animalTypes.get(animal)); 
-    cAnimal.update(time);
-    
-    // Choose a random animal
-    animal = int(random(animals.size()));
     
     // Reset the speed back to the original speed
     speed = initspeed;

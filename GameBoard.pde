@@ -336,7 +336,6 @@ class GameBoard {
           combos++;
         }
         if (combos>1 && total>0) {
-          animals.get(animalTypes.get(animal)).setEmotion("happy",2000);
           int xc = avgX/total;
           int yc = avgY/total;  
           drawCombos(xc, yc);
