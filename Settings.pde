@@ -100,7 +100,11 @@ class Config extends Observable {
     if (type == ConfigTypes.INTEGER) {
       return ((Integer) valObj) == val2;
     } else if (type == ConfigTypes.STRING) {
-      return ((String) valObj).equals((String) val2);
+      if (valObj != null) {
+        return ((String) valObj).equals((String) val2);
+      } else {
+        return valObj == val2;
+      }
     } else if (type == ConfigTypes.FLOAT) {
       return ((Float) valObj) == val2;
     } else if (type == ConfigTypes.BOOLEAN) {
@@ -127,7 +131,7 @@ class Config extends Observable {
   }
   public Object get(String name) {
     for (String name2 : this.configs.keySet()) {
-      if (name2 == name) {
+      if (name2.equals(name)) {
         return this.configs.get(name2);
       }
     }
@@ -171,7 +175,7 @@ class Config extends Observable {
         }
 
         String[] supportedVersions = new String[]{"0.75", "0.8"};
-        if (!version.equals(this.version) && !Arrays.asList(supportedVersions).contains(version)) {
+        if (version != null && !version.equals(this.version) && !Arrays.asList(supportedVersions).contains(version)) {
           // TODO: Decide on better layout for long paths
           throw new ConfigLoadError("Configuration file is from an unsupported version ("+version+").\nSupported versions are "+Arrays.toString(supportedVersions)+"\nConfig path: "+path);
         }

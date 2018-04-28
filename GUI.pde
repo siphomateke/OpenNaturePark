@@ -30,7 +30,7 @@ public GUIElement getGUIElement(String name) {
   GUIElement element = null;
   searchLoop:
   for (GUIElement e : GUINames) {
-    if (e.name==name) {
+    if (e.name.equals(name)) {
       element = e;
       break searchLoop;
     }
@@ -160,16 +160,16 @@ public String getTextFieldValue(String name) {
 public void handleButtonEvents(GImageButton button, GEvent event) {
   String name = getGUIControlName(button);
   //println(name+" was "+event.name());
-  if (name=="PlayButton" && gameState==STATEINTRO) {
+  if ("PlayButton".equals(name) && gameState==STATEINTRO) {
     gameState = STATEGAME;
   }
-  if (name=="SettingsButton" && gameState==STATEINTRO) {
+  if ("SettingsButton".equals(name) && gameState==STATEINTRO) {
     gameState = STATESETTINGS;
   }
-  if (name=="BackButtonSettings" && gameState==STATESETTINGS) {
+  if ("BackButtonSettings".equals(name) && gameState==STATESETTINGS) {
     gameState = STATEINTRO;
   }
-  if (name=="SaveButton" && gameState==STATESETTINGS) {
+  if ("SaveButton".equals(name) && gameState==STATESETTINGS) {
     GValueControl s = (GValueControl) getGUIControl("SpeedSlider");
     config.set("numToFastest", s.getValueI());
     int xTiles = int(getTextFieldValue("GridSizeXTextField"));
@@ -195,11 +195,11 @@ public void handleButtonEvents(GImageButton button, GEvent event) {
       gameState = STATEINTRO;
     }
   }
-  if (name=="BackButtonGame" && gameState==STATEGAME) {
+  if ("BackButtonGame".equals(name) && gameState==STATEGAME) {
     gameState = STATEINTRO;
     gameOver();
   }
-  if (name=="RestartButton" && gameState==STATEGAME) {
+  if ("RestartButton".equals(name) && gameState==STATEGAME) {
     gameOver();
     newGame();
   }
@@ -211,7 +211,7 @@ public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) {
 
 public void handleSliderEvents(GValueControl slider, GEvent event) {
   /*String name = getGUIControlName(slider);
-  if (name=="SpeedSlider" && gameState==STATESETTINGS) {
+  if ("SpeedSlider".equals(name) && gameState==STATESETTINGS) {
     config.set("numToFastest", slider.getValueI());
   }*/
 }

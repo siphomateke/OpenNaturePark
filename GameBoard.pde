@@ -197,7 +197,7 @@ class GameBoard {
       for (int y=config.getInt("yTiles")-1; y>=0; y--) {
         for (int x=0; x<config.getInt("xTiles"); x++) {
           if (!filled) {
-            if (tiles[x][y].getType().name=="blank") {
+            if ("blank".equals(tiles[x][y].getType().name)) {
               setBlock(x,y,rainbow[y%5]);
               filled = true;
             }
@@ -221,7 +221,7 @@ class GameBoard {
         for (int x=0; x<config.getInt("xTiles"); x++) {
           for (int y=config.getInt("yTiles")-1; y>=0; y--) {
             // Apply gravity if there is no block underneath
-            if (blockExists(x, y+1, "blank") && tiles[x][y].type!="blank") {
+            if (blockExists(x, y+1, "blank") && !"blank".equals(tiles[x][y].type)) {
               tiles[x][y+1] = makeBlock(x, y+1, tiles[x][y].type);
               tiles[x][y] = makeBlock(x, y, "blank");
               appliedGravity = true;
@@ -238,8 +238,8 @@ class GameBoard {
         for (int x=0; x<config.getInt("xTiles"); x++) {
           for (int y=config.getInt("yTiles")-1; y>=0; y--) {
             String type = tiles[x][y].getType().name;
-            if (type!="blank") {
-              if (type!="lightning" && type!="star" && type!="n" && type!="stone") {
+            if (!"blank".equals(type)) {
+              if (!"lightning".equals(type) && !"star".equals(type) && !"n".equals(type) && !"stone".equals(type)) {
                 if ( (blockExists(x+1, y, type) && blockExists(x-1, y, type) && !tiles[x+1][y].explode && !tiles[x-1][y].explode) ||
                   (blockExists(x, y+1, type) && blockExists(x, y-1, type) && !tiles[x][y+1].explode && !tiles[x][y+1].explode) ||
                   (blockExists(x+1, y+1, type) && blockExists(x-1, y-1, type) && !tiles[x+1][y+1].explode && !tiles[x-1][y-1].explode) ||
@@ -290,7 +290,7 @@ class GameBoard {
                     }
                   }
                 }
-              } else if (type=="n") {
+              } else if ("n".equals(type)) {
                 explode(x, y);
                 avgX+=x;
                 avgY+=y;
@@ -305,7 +305,7 @@ class GameBoard {
                 explode(x+1, y+1);
                 explode(x-1, y-1);
                 explode(x-1, y+1);
-              } else if (type=="lightning") {
+              } else if ("lightning".equals(type)) {
                 avgX+=x;
                 avgY+=y;
                 total+=1;
@@ -317,12 +317,12 @@ class GameBoard {
                 }
               }
               // Explode all the same color
-              else if (type=="star" && blockExists(x, y+1)) {
+              else if ("star".equals(type) && blockExists(x, y+1)) {
                 explode(x, y);
                 String typeCheck = tiles[x][y+1].getType().name;
                 for (int x2=0; x2<config.getInt("xTiles"); x2++) {
                   for (int y2=config.getInt("yTiles")-1; y2>=0; y2--) {
-                    if (tiles[x2][y2].getType().name==typeCheck) {
+                    if (typeCheck != null && typeCheck.equals(tiles[x2][y2].getType().name)) {
                       explode(x2, y2);
                     }
                   }
@@ -372,7 +372,7 @@ class GameBoard {
     loop:
     for (int x=0; x<config.getInt("xTiles"); x++) {
       for (int y=config.getInt("yTiles")-1; y>=0; y--) {
-        if (tiles[x][y].getType().name!="blank") {
+        if (!"blank".equals(tiles[x][y].getType().name)) {
           // If this will fall or disappear then it's unstable
           if (blockExists(x, y+1, "blank") || tiles[x][y].explode || (blockExists(x, y+1) && tiles[x][y+1].explode)) {
             stable = false;
@@ -388,7 +388,7 @@ class GameBoard {
     loop:
     for (int x=0; x<config.getInt("xTiles"); x++) {
       for (int y=config.getInt("yTiles")-1; y>=0; y--) {
-        if (tiles[x][y].getType().name!="blank") {
+        if (!"blank".equals(tiles[x][y].getType().name)) {
           if (tiles[x][y].exploding) {
             exploding = true;
             break loop;
@@ -406,7 +406,7 @@ public void drawCombos(int x, int y) {
 }
 
 public boolean blockExists(int x, int y, String name) {
-  if (x<config.getInt("xTiles") && x>=0 && y<config.getInt("yTiles") && y>=0 && ((board.tiles[x][y].getType().name==name || (name=="any" && board.tiles[x][y].getType().name!="blank")) || name==null)) {
+  if (x<config.getInt("xTiles") && x>=0 && y<config.getInt("yTiles") && y>=0 && ((board.tiles[x][y].getType().name.equals(name) || ("any".equals(name) && !"blank".equals(board.tiles[x][y].getType().name))) || name == null)) {
     return true;
   } else {
     return false;

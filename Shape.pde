@@ -65,7 +65,7 @@ class Shape {
   }
   public boolean colliding(int x1, int y1) {
     for (Block b : blocks) {
-      if (blockExists(b.x+x1, b.y+y1) && board.tiles[b.x+x1][b.y+y1].getType().name!="blank") {
+      if (blockExists(b.x+x1, b.y+y1) && !"blank".equals(board.tiles[b.x+x1][b.y+y1].getType().name)) {
         return true;
       }
     }

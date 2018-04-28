@@ -13,7 +13,7 @@ class Block {
     this.y = y;
     this.type = type;
     updateLoc();
-    if (getType().name!="blank") {
+    if (!"blank".equals(getType().name)) {
       img = getImage(getType().img);
       imgSize = imgToWorldCoords(img);
     }
@@ -27,7 +27,7 @@ class Block {
     return blockTypes.get(type);  
   }
   public void display() {
-    if (getType().name!="blank") {
+    if (!"blank".equals(getType().name)) {
       image(img,loc.x,loc.y,imgSize.x,imgSize.y);
     }
   }

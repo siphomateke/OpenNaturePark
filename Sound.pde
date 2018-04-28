@@ -39,7 +39,7 @@ class Sound {
   }
 
   public void play(float rate, float amp) {
-    if ((category=="music" && backgroundMusic) || (category=="sfx" && soundEffects)) {
+    if (("music".equals(category) && backgroundMusic) || ("sfx".equals(category) && soundEffects)) {
       if (num==1) {
         file.play(rate, amp);
       } else {
@@ -51,7 +51,7 @@ class Sound {
 
   public void play() {
     float amp = 1;
-    if (category=="music") {
+    if ("music".equals(category.equals)) {
       amp = 0.5;
     }
     this.play(1, amp);
