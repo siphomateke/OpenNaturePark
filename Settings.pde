@@ -90,10 +90,22 @@ class Config extends Observable {
   public boolean hasProp(String name) {
     return this.configs.containsKey(name);
   }
+  public boolean configEqual(String name, Object val2) {
+    ConfigTypes type = this.configTypes.get(name);
+    Object valObj = this.get(name);
+    if (type == ConfigTypes.INTEGER) {
+      return ((Integer) valObj) == val2;
+    } else if (type == ConfigTypes.STRING) {
+      return ((String) valObj).equals((String) val2);
+    } else if (type == ConfigTypes.FLOAT) {
+      return ((Float) valObj) == val2;
+    } else if (type == ConfigTypes.BOOLEAN) {
+      return ((Boolean) valObj) == val2;
+    }
+    return false;
+  }
   public boolean set(String name, Object val, boolean notify) {
-    // FIXME: Add equal check for string
-    // FIXME: equality not working at all
-    boolean shouldSet = !this.hasProp(name) || (this.hasProp(name) && val != this.get(name));
+    boolean shouldSet = !this.hasProp(name) || (this.hasProp(name) && !this.configEqual(name, val));
     if (shouldSet) {
       this.configs.put(name, val);
       this.setChanged();
