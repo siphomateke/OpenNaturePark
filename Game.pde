@@ -108,7 +108,10 @@ public void game(float time) {
   drawGameBackground();
   board.display();
   if (paused) {
-    drawImage("paused",11,60);
+    drawImageCenter("paused",
+      int(board.getVisibleCenter().x),
+      int(board.getVisibleCenter().y)
+    );
   }
   drawImageStack(time);
   scoreFont.write(str(score),65,4);
@@ -128,13 +131,22 @@ public void game(float time) {
   
   /*if (newGame) {
     if (timers.get("gameStart1")<1000 && timers.get("gameStart2")==0) {
-      drawImage(getImage("ready_txt"),11,60);
+      drawImageCenter("ready_txt",
+        int(board.getVisibleCenter().x),
+        int(board.getVisibleCenter().y)
+      );
     }
     else if (timers.get("gameStart2")<1000) {
-      drawImage(getImage("set_txt"),11,60);
+      drawImageCenter("set_txt",
+        int(board.getVisibleCenter().x),
+        int(board.getVisibleCenter().y)
+      );
     }
     else if (timers.get("gameStart3")<1000) {
-      drawImage(getImage("go_txt"),11,60);
+      drawImageCenter("set_txt",
+        int(board.getVisibleCenter().x),
+        int(board.getVisibleCenter().y)
+      );
     }
   }*/
 }

@@ -70,12 +70,21 @@ public void drawImage(PImage img, int x, int y) {
   drawImage(img,x,y,1,0);
 }
 
+public void drawImageCenter(PImage img, int x, int y) {
+  drawImage(img,int(x-img.width/2f),int(y-img.height/2f));
+}
+
 public void drawImage(String img, int x, int y, float angle) {
   drawImage(getImage(img),x,y,1,angle);
 }
 
 public void drawImage(String img, int x, int y) {
   drawImage(img,x,y,0);
+}
+
+public void drawImageCenter(String img, int x, int y) {
+  PImage actualImg = getImage(img);
+  drawImage(img,int(x-actualImg.width/2f),int(y-actualImg.height/2f));
 }
 
 public void drawImage(String img, int x, int y, float scale, float angle) {

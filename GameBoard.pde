@@ -132,6 +132,10 @@ class GameBoard {
   public int getBottomEdge() {
     return this.getTopEdge()+this.getVisibleHeight();
   }
+  public PVector getVisibleCenter() {
+    return new PVector(board.getLeftEdge()+board.getVisibleWidth()/2f,
+      board.getTopEdge()+board.getVisibleHeight()/2f);
+  }
   // Reset the board
   // called when game is over
   public void reset() {
