@@ -43,6 +43,9 @@ class Shape {
     top += y;
     bottom += y;
   }
+  public int getWidth() {
+    return right - left;
+  }
   public PVector getCenter() {
     return new PVector(
       (right - left + 1) / 2.0f,
@@ -327,6 +330,7 @@ public Shape randomShape() {
 
 public void nextPlayer() {
   board.setPlayer(board.nextPlayer);
+  board.player.x = int(config.getInt("xTiles")/2.0 - board.player.getWidth()/2.0);
   board.setNextPlayer(randomShape());
   if (speed>fastestSpeed) {
     speed-=((initspeed-fastestSpeed)/config.getInt("numToFastest"));
