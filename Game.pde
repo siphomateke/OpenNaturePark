@@ -115,7 +115,7 @@ public void game(float time) {
   }
   drawImageStack(time);
   scoreFont.write(str(score),65,4);
-  scoreFont.write(str(config.get("highScore")),gameWidth-3,4);
+  scoreFont.write(str(config.getInt("highScore")),gameWidth-3,4);
   sim.update(time);
   sim.display();
   comboFont.display();
