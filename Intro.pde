@@ -1,6 +1,6 @@
 public void intro(float time) {
   if (gameStateChanged) {
-    surface.setSize(int(INTROWIDTH*gameScale),int(INTROHEIGHT*gameScale));
+    surface.setSize(int(INTROWIDTH*config.getFloat("gameScale")),int(INTROHEIGHT*config.getFloat("gameScale")));
   }
   
   drawIntro();

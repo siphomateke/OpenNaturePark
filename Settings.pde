@@ -11,6 +11,8 @@ public void gameSettings(float time) {
     q.setText(str(config.getInt("xTiles")));
     q = (GTextField) getGUIControl("GridSizeYTextField");
     q.setText(str(config.getInt("yTiles")));
+    q = (GTextField) getGUIControl("GameScaleTextField");
+    q.setText(str(config.getFloat("gameScale")));
   }
   background(#8abde1);
 }
@@ -22,7 +24,7 @@ public void drawImageRandom(String img, int num) {
 }
 
 public void updateGameSize() {
-  surface.setSize(int(gameWidth * gameScale), int(gameHeight * gameScale));
+  surface.setSize(int(gameWidth * config.getFloat("gameScale")), int(gameHeight * config.getFloat("gameScale")));
   windowWidth = width;
   windowHeight = height;
   center = new PVector(width/2,height/2);
@@ -71,13 +73,15 @@ class Config extends Observable {
     
     this.configs = new HashMap<String, Object>();
     this.configTypes = new HashMap<String, ConfigTypes>();
-    configTypes.put("highScore", ConfigTypes.INTEGER);
-    configTypes.put("xTiles", ConfigTypes.INTEGER);
-    configTypes.put("yTiles", ConfigTypes.INTEGER);
-    configTypes.put("numToFastest", ConfigTypes.INTEGER);
+    this.configTypes.put("highScore", ConfigTypes.INTEGER);
+    this.configTypes.put("xTiles", ConfigTypes.INTEGER);
+    this.configTypes.put("yTiles", ConfigTypes.INTEGER);
+    this.configTypes.put("numToFastest", ConfigTypes.INTEGER);
+    this.configTypes.put("gameScale", ConfigTypes.FLOAT);
 
     // Currently it's just determined from the default value
     this.set("highScore", 0);
+    this.set("gameScale", 2f);
     this.set("xTiles", 6);
     this.set("yTiles", 10);
     // The number of placements till the game is
@@ -166,7 +170,7 @@ class Config extends Observable {
           }
         }
 
-        String[] supportedVersions = new String[]{"0.75"};
+        String[] supportedVersions = new String[]{"0.75", "0.8"};
         if (!version.equals(this.version) && !Arrays.asList(supportedVersions).contains(version)) {
           // TODO: Decide on better layout for long paths
           throw new ConfigLoadError("Configuration file is from an unsupported version ("+version+").\nSupported versions are "+Arrays.toString(supportedVersions)+"\nConfig path: "+path);

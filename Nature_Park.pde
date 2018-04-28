@@ -3,7 +3,7 @@ import java.util.Observer;
 
 //import processing.sound.*;
 
-public static final String VERSION = "0.8";
+public static final String VERSION = "0.8.1";
 
 Config config;
 
@@ -15,7 +15,6 @@ public static final int INTROWIDTH = 128;
 public static final int INTROHEIGHT = 128;
 int gameWidth = 128;
 int gameHeight = 128;
-float gameScale = 2;
 int windowWidth = 0;
 int windowHeight = 0;
 int padding = 0;

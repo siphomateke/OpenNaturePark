@@ -87,11 +87,9 @@ public void initGUI() {
   addGUIElement("GridSizeXTextField",STATESETTINGS,new GTextField(this, 0, 0, toWorldX(20), toWorldY(10)));
   addGUIElement("GridSizeTimesLabel",STATESETTINGS,new GLabel(this, 0, 0, toWorldX(50), toWorldY(20), "x"));
   addGUIElement("GridSizeYTextField",STATESETTINGS,new GTextField(this, 0, 0, toWorldX(20), toWorldY(10)));
-  
-  GTextField q = (GTextField) getGUIControl("GridSizeXTextField");
-  q.setText(str(config.getInt("xTiles")));
-  q = (GTextField) getGUIControl("GridSizeYTextField");
-  q.setText(str(config.getInt("yTiles")));
+
+  addGUIElement("GameScaleLabel",STATESETTINGS,new GLabel(this, 0, 0, toWorldX(50), toWorldY(20), "Game scale: "));
+  addGUIElement("GameScaleTextField",STATESETTINGS,new GTextField(this, 0, 0, toWorldX(20), toWorldY(10)));
   
   addGUIElement("BackButtonSettings",STATESETTINGS,new GImageButton(this, 0, 0, toWorldX(14), toWorldY(14), new String[]{
     scaleImageToWorld("back_button"),
@@ -125,6 +123,8 @@ public void refreshGUIPositions() {
   moveControl("GridSizeXTextField", 50, 30);
   moveControl("GridSizeTimesLabel", 77, 25);
   moveControl("GridSizeYTextField", 90, 30);
+  moveControl("GameScaleLabel", 10, 45);
+  moveControl("GameScaleTextField", 50, 50);
   moveControl("BackButtonSettings", 100, 100);
   moveControl("SaveButton", 14, 100);
 }
@@ -152,6 +152,11 @@ public String getGUIControlName(GAbstractControl b) {
   return name;
 }
 
+public String getTextFieldValue(String name) {
+  GTextField field = (GTextField) getGUIControl(name);
+  return field.getText();
+}
+
 public void handleButtonEvents(GImageButton button, GEvent event) {
   String name = getGUIControlName(button);
   //println(name+" was "+event.name());
@@ -167,21 +172,28 @@ public void handleButtonEvents(GImageButton button, GEvent event) {
   if (name=="SaveButton" && gameState==STATESETTINGS) {
     GValueControl s = (GValueControl) getGUIControl("SpeedSlider");
     config.set("numToFastest", s.getValueI());
-    GTextField qx = (GTextField) getGUIControl("GridSizeXTextField");
-    GTextField qy = (GTextField) getGUIControl("GridSizeYTextField");
-    int xTiles = int(qx.getText());
-    int yTiles = int(qy.getText());
+    int xTiles = int(getTextFieldValue("GridSizeXTextField"));
+    int yTiles = int(getTextFieldValue("GridSizeYTextField"));
+    float gameScale = float(getTextFieldValue("GameScaleTextField"));
+    boolean gameScaleChanged = gameScale != config.getFloat("gameScale");
     config.set("xTiles", xTiles);
     config.set("yTiles", yTiles);
-    config.save();
-    updateGameSize();
-    gameState = STATEINTRO;
-    // Once saving gameScale is possible, this will need to exit since
-    // G4P doesn't allow resizing controls after initialization
-    /* int response = showConfirmDialog("Changing game scale requires a restart. Would you like to exit now?\n(Cancelling or pressing no will revert changes made to game scale)", "Warning");
-    if (response == 0) {
-      exit();
-    } */
+    // Exit since G4P doesn't allow resizing controls after initialization
+    boolean quit = false;
+    if (gameScaleChanged) {
+      int response = showConfirmDialog("Changing game scale requires a restart. Would you like to exit now?\n(Cancelling or pressing no will revert changes made to game scale)", "Warning");
+      if (response == 0) {
+        config.set("gameScale", gameScale);
+        config.save();
+        quit = true;
+        exit();
+      }
+    }
+    if (!quit) {
+      config.save();
+      updateGameSize();
+      gameState = STATEINTRO;
+    }
   }
   if (name=="BackButtonGame" && gameState==STATEGAME) {
     gameState = STATEINTRO;
