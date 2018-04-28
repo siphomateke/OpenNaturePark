@@ -1,3 +1,5 @@
+import javax.swing.JOptionPane;
+
 HashMap<String,PImage> images = new HashMap<String,PImage>(); 
 
 public void addImageAbsolute(String name, String path) {
@@ -223,4 +225,28 @@ class GraphicRegion {
   GraphicRegion(int x, int y, int width, int height) {
     this(x, y, width, height, 0);
   }
+}
+
+public int showConfirmDialog(String message, String title) {
+  return JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+}
+
+public void showMessage(String message, String title, int messageType) {
+  JOptionPane.showMessageDialog(null, message, title, messageType);
+}
+
+public void showErrorMessage(String message, String title) {
+  showMessage(message, title, JOptionPane.ERROR_MESSAGE);
+}
+
+public void showErrorMessage(String message) {
+  showErrorMessage(message, "Error");
+}
+
+public void showInfoMessage(String message, String title) {
+  showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
+}
+
+public void showInfoMessage(String message) {
+  showInfoMessage(message, "Info");
 }

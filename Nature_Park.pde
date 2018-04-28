@@ -1,13 +1,14 @@
 import g4p_controls.*;
+import java.util.Observer;
 
 //import processing.sound.*;
 
-public static final float VERSION = 0.75;
+public static final String VERSION = "0.8";
+
+Config config;
 
 // Declare constants
 public static final int TILESIZE = 10;
-int xTiles = 6;
-int yTiles = 10;
 // The actual width of the game on a phone
 // to allow scaling up proportionately
 public static final int INTROWIDTH = 128;
@@ -24,13 +25,9 @@ ParticleSim sim;
 int initspeed = 1000;
 int speed = initspeed;
 int fastestSpeed = 200;
-// The number of placements till the game is
-// at its fastest speed
-int numToFastest = 200;
 int numLevels = 10;
 int level = 0;
 int score = 0;
-int highScore = 0;
 int combos = 0;
 
 // Delay the spawn of the next player
@@ -48,10 +45,37 @@ NumericFont comboFont;
 
 PVector center;
 
+class Events implements Observer {
+  @Override
+  public void update(Observable o, Object arg) {
+    if (o instanceof Config) {
+      if (arg instanceof ConfigLoadEvent) {
+        updateGameSize(); // needed to scale GUI images
+        initGUI();
+      }
+      if (arg instanceof ConfigPropChangeEvent) {
+        ConfigPropChangeEvent e = (ConfigPropChangeEvent) arg;
+        // If the number of tiles has changed, re-caculate game width and height
+        if (e.changed.contains("xTiles") || e.changed.contains("yTiles")) {
+          updateGameSize();
+        }
+      }
+    }
+  }
+}
+
+Events events;
+
 void setup() {
   size(128,128);
   //fullScreen();
   noSmooth();
+
+  config = new Config(dataPath("config.json"));
+
+  events = new Events();
+  config.addObserver(events);
+
   // Load all images in the data directory
   loadAllImages("/");
   loadAllImages("board/");
@@ -65,12 +89,14 @@ void setup() {
   
   initRandomShapeGen();
 
-  updateGameSize();
-
   // Load last settings and highscore from the config file
-  loadConfig();
-  // Initialize all the gui elements
-  initGUI();
+  // also initialize the GUI
+  try {
+    config.load();
+  } catch (Exception e) {
+    showErrorMessage(e.getMessage()+"\n\n The default configuration will be loaded instead.", "Error loading config");
+    config.loadDefault();
+  }
   //initSounds();
   // Initialize the particle simulation
   sim = new ParticleSim();

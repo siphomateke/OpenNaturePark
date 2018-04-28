@@ -73,9 +73,9 @@ public void game(float time) {
     comboFont.update(time);
     // If this is a new high score
     // Update save file
-    if (score>highScore) {
-      highScore = score;
-      saveConfig();
+    if (score>config.get("highScore")) {
+      config.set("highScore", score);
+      config.save();
     }
   }  
   else if (gameover) {
@@ -112,7 +112,7 @@ public void game(float time) {
   }
   drawImageStack(time);
   scoreFont.write(str(score),65,4);
-  scoreFont.write(str(highScore),gameWidth-3,4);
+  scoreFont.write(str(config.get("highScore")),gameWidth-3,4);
   /*if (combos>2) {
     drawImage(getImage("combo"), 17, 39);
     drawImage(getImage("combo_star"), 11, 60);
@@ -145,7 +145,7 @@ public void gameOver() {
   level = 0;
   score = 0;
   board.setNextPlayer(null);
-  saveConfig();
+  config.save();
 }
 
 public void newGame() {

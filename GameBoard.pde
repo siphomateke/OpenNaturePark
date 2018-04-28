@@ -19,10 +19,10 @@ class GameBoard {
     this.yOffset = yOffset;
     offset = toWorldCoords(new PVector(xOffset, yOffset));
     // The array which stores the tiles
-    tiles = new Block[xTiles][yTiles];
+    tiles = new Block[config.get("xTiles")][config.get("yTiles")];
     // Start of with a balnk board
-    for (int x=0; x<xTiles; x++) {
-      for (int y=0; y<yTiles; y++) {
+    for (int x=0; x<config.get("xTiles"); x++) {
+      for (int y=0; y<config.get("yTiles"); y++) {
         setBlock(x, y, "blank");
       }
     }
@@ -99,8 +99,8 @@ class GameBoard {
     // Draw the actual game background tiles
     g.translate(borderImage.width, borderImage.height);
     PImage i = getImage("bg_tile");
-    for (int x=0; x<xTiles; x++) {
-      for (int y=0; y<yTiles; y++) {
+    for (int x=0; x<config.get("xTiles"); x++) {
+      for (int y=0; y<config.get("yTiles"); y++) {
         g.image(i, x*TILESIZE, y*TILESIZE);
       }
     }
@@ -109,10 +109,10 @@ class GameBoard {
     imgSize = imgToWorldCoords(img);
   }
   public int getWidth() {
-    return xTiles * TILESIZE;
+    return config.get("xTiles") * TILESIZE;
   }
   public int getHeight() {
-    return yTiles * TILESIZE;
+    return config.get("yTiles") * TILESIZE;
   }
   public int getVisibleWidth() {
     return getWidth() + borderImage.width*2;
@@ -135,8 +135,8 @@ class GameBoard {
   // Reset the board
   // called when game is over
   public void reset() {
-    for (int x=0; x<xTiles; x++) {
-      for (int y=0; y<yTiles; y++) {
+    for (int x=0; x<config.get("xTiles"); x++) {
+      for (int y=0; y<config.get("yTiles"); y++) {
         setBlock(x, y, "blank");
       }
     }
@@ -174,8 +174,8 @@ class GameBoard {
 
     g.translate(toWorldX(borderImage.width), toWorldY(borderImage.height));
     // Draw all the tiles on the board
-    for (int x=0; x<xTiles; x++) {
-      for (int y=0; y<yTiles; y++) {
+    for (int x=0; x<config.get("xTiles"); x++) {
+      for (int y=0; y<config.get("yTiles"); y++) {
         tiles[x][y].display();
       }
     }
@@ -194,8 +194,8 @@ class GameBoard {
       fillTimer = 0;
       boolean filled = false;
       outerloop:
-      for (int y=yTiles-1; y>=0; y--) {
-        for (int x=0; x<xTiles; x++) {
+      for (int y=config.get("yTiles")-1; y>=0; y--) {
+        for (int x=0; x<config.get("xTiles"); x++) {
           if (!filled) {
             if (tiles[x][y].getType().name=="blank") {
               setBlock(x,y,rainbow[y%5]);
@@ -218,8 +218,8 @@ class GameBoard {
       boolean appliedGravity = true;
       while (appliedGravity) {
         appliedGravity = false;
-        for (int x=0; x<xTiles; x++) {
-          for (int y=yTiles-1; y>=0; y--) {
+        for (int x=0; x<config.get("xTiles"); x++) {
+          for (int y=config.get("yTiles")-1; y>=0; y--) {
             // Apply gravity if there is no block underneath
             if (blockExists(x, y+1, "blank") && tiles[x][y].type!="blank") {
               tiles[x][y+1] = makeBlock(x, y+1, tiles[x][y].type);
@@ -235,8 +235,8 @@ class GameBoard {
         int avgX = 0;
         int avgY = 0;
         int total = 0;
-        for (int x=0; x<xTiles; x++) {
-          for (int y=yTiles-1; y>=0; y--) {
+        for (int x=0; x<config.get("xTiles"); x++) {
+          for (int y=config.get("yTiles")-1; y>=0; y--) {
             String type = tiles[x][y].getType().name;
             if (type!="blank") {
               if (type!="lightning" && type!="star" && type!="n" && type!="stone") {
@@ -312,7 +312,7 @@ class GameBoard {
                 //stable = false;
   
                 // Explode all blocks below
-                for (int j=y; j<yTiles; j++) {
+                for (int j=y; j<config.get("yTiles"); j++) {
                   explode(x, j);
                 }
               }
@@ -320,8 +320,8 @@ class GameBoard {
               else if (type=="star" && blockExists(x, y+1)) {
                 explode(x, y);
                 String typeCheck = tiles[x][y+1].getType().name;
-                for (int x2=0; x2<xTiles; x2++) {
-                  for (int y2=yTiles-1; y2>=0; y2--) {
+                for (int x2=0; x2<config.get("xTiles"); x2++) {
+                  for (int y2=config.get("yTiles")-1; y2>=0; y2--) {
                     if (tiles[x2][y2].getType().name==typeCheck) {
                       explode(x2, y2);
                     }
@@ -356,8 +356,8 @@ class GameBoard {
       }
       player.update(delta);
     }
-    for (int x=0; x<xTiles; x++) {
-      for (int y=yTiles-1; y>=0; y--) {
+    for (int x=0; x<config.get("xTiles"); x++) {
+      for (int y=config.get("yTiles")-1; y>=0; y--) {
         tiles[x][y].update(time);
       }
     }
@@ -370,8 +370,8 @@ class GameBoard {
   public boolean isStable() {
     boolean stable = true;
     loop:
-    for (int x=0; x<xTiles; x++) {
-      for (int y=yTiles-1; y>=0; y--) {
+    for (int x=0; x<config.get("xTiles"); x++) {
+      for (int y=config.get("yTiles")-1; y>=0; y--) {
         if (tiles[x][y].getType().name!="blank") {
           // If this will fall or disappear then it's unstable
           if (blockExists(x, y+1, "blank") || tiles[x][y].explode || (blockExists(x, y+1) && tiles[x][y+1].explode)) {
@@ -386,8 +386,8 @@ class GameBoard {
   public boolean isExploding() {
     boolean exploding = false;
     loop:
-    for (int x=0; x<xTiles; x++) {
-      for (int y=yTiles-1; y>=0; y--) {
+    for (int x=0; x<config.get("xTiles"); x++) {
+      for (int y=config.get("yTiles")-1; y>=0; y--) {
         if (tiles[x][y].getType().name!="blank") {
           if (tiles[x][y].exploding) {
             exploding = true;
@@ -406,7 +406,7 @@ public void drawCombos(int x, int y) {
 }
 
 public boolean blockExists(int x, int y, String name) {
-  if (x<xTiles && x>=0 && y<yTiles && y>=0 && ((board.tiles[x][y].getType().name==name || (name=="any" && board.tiles[x][y].getType().name!="blank")) || name==null)) {
+  if (x<config.get("xTiles") && x>=0 && y<config.get("yTiles") && y>=0 && ((board.tiles[x][y].getType().name==name || (name=="any" && board.tiles[x][y].getType().name!="blank")) || name==null)) {
     return true;
   } else {
     return false;
