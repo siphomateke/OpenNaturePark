@@ -52,11 +52,6 @@ public void initGUI() {
     scaleImageToWorld("settings_button2"),
     scaleImageToWorld("settings_button3")
   }));
-  /*addGUIElement("ExitButton",STATEINTRO,new GImageButton(this, toWorldX(100), toWorldY(14), toWorldX(14), toWorldY(14), new String[]{
-    scaleImageToWorld("exit_button"),
-    scaleImageToWorld("exit_button2"),
-    scaleImageToWorld("exit_button3")
-  }));*/
   
   addGUIElement("BackButtonGame",STATEGAME,new GImageButton(this, toWorldX(gameWidth-18), toWorldY(16), toWorldX(14), toWorldY(14), new String[]{
     scaleImageToWorld("back_button"),
