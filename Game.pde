@@ -116,15 +116,6 @@ public void game(float time) {
   drawImageStack(time);
   scoreFont.write(str(score),65,4);
   scoreFont.write(str(config.get("highScore")),gameWidth-3,4);
-  /*if (combos>2) {
-    drawImage(getImage("combo"), 17, 39);
-    drawImage(getImage("combo_star"), 11, 60);
-    drawImage(getImage("combo_star"), 23, 42);
-    drawImage(getImage("combo_star"), 26, 73);
-    drawImage(getImage("combo_star"), 48, 36);
-    drawImage(getImage("combo_star"), 46, 78);
-    drawImage(getImage("combo_star"), 56, 63);
-  }*/
   sim.update(time);
   sim.display();
   comboFont.display();
