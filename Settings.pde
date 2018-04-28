@@ -130,16 +130,16 @@ class Config extends Observable {
     return null;
   }
   public Integer getInt(String name) {
-    return (Integer) this.get(name);
+    return (int) this.get(name);
   }
   public String getString(String name) {
     return (String) this.get(name);
   }
   public Float getFloat(String name) {
-    return (Float) this.get(name);
+    return (float) this.get(name);
   }
   public Boolean getBoolean(String name) {
-    return (Boolean) this.get(name);
+    return (boolean) this.get(name);
   }
   public void loadDefault() {
     ArrayList<String> changed = new ArrayList<String>();
